@@ -16,7 +16,7 @@ public interface FileService {
 
     FileModel uploadAudio(String path, MultipartFile multipartFile) throws IOException;
 
-    InputStream getAudioFile(String path, String fileName, int id) throws FileNotFoundException;
+    InputStream getAudioFile(String path, String fileName, Long id);
 
 
 }

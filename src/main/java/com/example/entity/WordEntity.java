@@ -15,18 +15,23 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "audioUpload")
-public class AudioEntity {
+@Table(name = "words")
+public class WordEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(length = 50)
-    private String title;
+    private String word;
     @Column(length = 200)
-    private String description;
-    private String tags;
-    private String audioName;
+
+    private String IPA;
+    private String meaningWord;
+    private String type;
+    private String sentence;
+    private String meaningSentence;
+    private String audioSentence;
+    private String audioWord;
 
     private Date addedDate;
 

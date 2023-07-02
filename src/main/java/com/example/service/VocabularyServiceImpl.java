@@ -1,8 +1,8 @@
 package com.example.service;
 
-import com.example.entity.WordEntity;
+import com.example.entity.VocabularyEntity;
 import com.example.exception.ResourceNotFoundException;
-import com.example.repository.WordRepository;
+import com.example.repository.VocabularyRepository;
 import jakarta.transaction.Transactional;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
@@ -20,26 +20,26 @@ import java.util.List;
  * 6/29/2023
  */
 @Service
-public class WordServiceImpl implements WordService {
+public class VocabularyServiceImpl implements VocabularyService {
 
-    private final WordRepository audioRepository;
+    private final VocabularyRepository audioRepository;
 
     private final String dirAudioWord = "D:/Self-Study/SpringBoot/LearnLanguageProject/audio/words";
     private final String dirAudioSentence = "D:/Self-Study/SpringBoot/LearnLanguageProject/audio/sentences";
 
-    public WordServiceImpl(WordRepository audioRepository) {
+    public VocabularyServiceImpl(VocabularyRepository audioRepository) {
         this.audioRepository = audioRepository;
     }
 
     @Transactional
     @Override
-    public WordEntity createWord(WordEntity wordEntity, MultipartFile audioWord, MultipartFile audioSentence) {
-        if (wordEntity.getWord() == null || wordEntity.getWord().isEmpty()) {
+    public VocabularyEntity createWord(VocabularyEntity vocabularyEntity, MultipartFile audioWord, MultipartFile audioSentence, MultipartFile img) {
+        if (vocabularyEntity.getWord() == null || vocabularyEntity.getWord().isEmpty()) {
             throw new ResourceNotFoundException(false, "Word can not be null or empty");
         }
         try {
-            wordEntity.setAddedDate(new Date());
-            WordEntity savedWord = audioRepository.save(wordEntity);
+            vocabularyEntity.setAddedDate(new Date());
+            VocabularyEntity savedWord = audioRepository.save(vocabularyEntity);
             // saveAudioWord, có nhiều extentions file mp3 khác nhau
             if (!audioWord.isEmpty()) {
                 String audioWordFileName = saveAudio(audioWord, savedWord.getId(), dirAudioWord, "word");
@@ -81,14 +81,14 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public WordEntity getById(Long id) {
+    public VocabularyEntity getById(Long id) {
         return audioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(false, "Audio not found"));
     }
 
     @Transactional
     @Override
-    public WordEntity update(WordEntity wordEntity, MultipartFile audio) {
-        return audioRepository.save(wordEntity);
+    public VocabularyEntity update(VocabularyEntity vocabularyEntity, MultipartFile audio) {
+        return audioRepository.save(vocabularyEntity);
 
     }
 
@@ -98,7 +98,7 @@ public class WordServiceImpl implements WordService {
     }
 
     @Override
-    public List<WordEntity> getAllAudio() {
+    public List<VocabularyEntity> getAllAudio() {
         return audioRepository.findAll();
     }
 }

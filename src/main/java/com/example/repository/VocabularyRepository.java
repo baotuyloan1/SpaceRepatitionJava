@@ -1,6 +1,6 @@
 package com.example.repository;
 
-import com.example.entity.WordEntity;
+import com.example.entity.VocabularyEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * 6/29/2023
  */
 @Repository
-public interface WordRepository extends JpaRepository<WordEntity, Long> {
+public interface VocabularyRepository extends JpaRepository<VocabularyEntity, Long> {
 
 
 }

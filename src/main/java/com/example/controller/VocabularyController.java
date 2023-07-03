@@ -1,15 +1,21 @@
 package com.example.controller;
 
-import com.example.entity.VocabularyEntity;
+import com.example.dto.DefaultFormatValidate;
+import com.example.entity.Vocabulary;
 import com.example.service.FileService;
 import com.example.service.VocabularyService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,11 +27,19 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "http://localhost:3000")
 public class VocabularyController {
 
-  @Value("${project.audio}")
-  private String path;
+  @Value("${dir.resource.audioWord}")
+  private String pathAudioWord;
+
+  @Value("${dir.resource.audioSentence}")
+  private String pathAudioSentence;
+
+  @Value("${dir.resource.imgWord}")
+  private String pathImg;
 
   private final VocabularyService vocabularyService;
   private final FileService fileService;
+
+  private final String DEFAULT_MESSAGE_FILE_NULL = "must not be null";
 
   public VocabularyController(VocabularyService vocabularyService, FileService fileService) {
     this.vocabularyService = vocabularyService;
@@ -34,43 +48,60 @@ public class VocabularyController {
 
   @PostMapping({"/", ""})
   public ResponseEntity<?> saveWord(
-      @Valid @RequestPart(value = "vocabulary", required = false) VocabularyEntity vocabulary,
-      @Valid @RequestPart(value = "audioWord", required = false) MultipartFile audioWord,
-      @Valid @RequestPart(value = "audioSentence", required = false) MultipartFile audiSentence,
-      @Valid @RequestPart(value = "img", required = false) MultipartFile img,
-      BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return new ResponseEntity<>(bindingResult.getAllErrors(), HttpStatus.NOT_ACCEPTABLE);
+      @Valid @RequestPart(value = "vocabulary", required = false) Vocabulary vocabulary,
+      BindingResult bindingResult,
+      @RequestPart(value = "audioWord", required = false) MultipartFile audioWord,
+      @RequestPart(value = "audioSentence", required = false) MultipartFile audioSentence,
+      @RequestPart(value = "img", required = false) MultipartFile img) {
+    if (audioWord == null) {
+      bindingResult.addError(new FieldError("audioWord", "audioWord", DEFAULT_MESSAGE_FILE_NULL));
     }
-    if (audioWord == null) {}
+    if (audioSentence == null) {
+      bindingResult.addError(
+          new FieldError("audioSentence", "audioSentence", DEFAULT_MESSAGE_FILE_NULL));
+    }
+    if (img == null) {
+      bindingResult.addError(new FieldError("img", "img", DEFAULT_MESSAGE_FILE_NULL));
+    }
+    if (bindingResult.hasErrors()) {
 
+      return new ResponseEntity<>(
+          new DefaultFormatValidate(bindingResult.getAllErrors()), HttpStatus.NOT_ACCEPTABLE);
+    }
     return new ResponseEntity<>(
-        vocabularyService.createWord(vocabulary, audioWord, audiSentence, img), HttpStatus.OK);
+        vocabularyService.createWord(vocabulary, audioWord, audioSentence, img), HttpStatus.OK);
   }
 
   @GetMapping({"/", ""})
-  public ResponseEntity<?> getAllAudios() {
-    return new ResponseEntity<List<VocabularyEntity>>(
-        vocabularyService.getAllAudio(), HttpStatus.OK);
+  public ResponseEntity<List<Vocabulary>> getAllAudios() {
+    return new ResponseEntity<>(vocabularyService.getAllVocabulary(), HttpStatus.OK);
   }
 
   @GetMapping("/{id}")
-  public VocabularyEntity getAudioById(@PathVariable Long id) {
+  public Vocabulary getAudioById(@PathVariable Long id) {
     return vocabularyService.getById(id);
   }
 
-  //    @GetMapping(value = "/playAudio/{id}", produces = MediaType.ALL_VALUE)
-  //    public void playAudio(@PathVariable Long id, HttpServletResponse response) {
-  //        WordEntity audio = wordService.getById(id);
-  //        InputStream resourse = null;
-  //        try {
-  //            resourse = fileService.getAudioFile(path, audio.getAudioName(), id);
-  //            response.setContentType(MediaType.ALL_VALUE);
-  //            StreamUtils.copy(resourse, response.getOutputStream());
-  //        } catch (IOException ex) {
-  //            throw new RuntimeException("Something went wrong", ex);
-  //        }
-  //    }
+  //      @GetMapping(value = "/playAudio/{id}", produces = MediaType.ALL_VALUE)
+  @GetMapping(value = "/playAudio/{fileName}")
+  public void playAudio(@PathVariable String fileName, HttpServletResponse response) {
+
+    String type = fileName.substring((fileName.indexOf("_")+1), fileName.indexOf("."));
+    String path = null;
+    if (type.equals("word")) {
+      path = pathAudioWord;
+    } else if (type.equals("sentence")) {
+      path = pathAudioSentence;
+    }
+    InputStream resource = null;
+    try {
+      resource = fileService.getAudioFile(path, fileName);
+      response.setContentType(MediaType.ALL_VALUE);
+      StreamUtils.copy(resource, response.getOutputStream());
+    } catch (IOException ex) {
+      throw new RuntimeException("Something went wrong", ex);
+    }
+  }
 
   // Api for uploading audio after posting titles and other audio
   //    @PostMapping("/post/{id}")
@@ -84,7 +115,13 @@ public class VocabularyController {
 
   @PutMapping(value = {"", "/"})
   public void updateWord(
-      @RequestBody VocabularyEntity vocabularyEntity, @RequestParam("audio") MultipartFile audio) {
-    vocabularyService.update(vocabularyEntity, audio);
+          @RequestBody Vocabulary vocabulary, @RequestParam("audio") MultipartFile audio) {
+    vocabularyService.update(vocabulary, audio);
   }
+
+  @GetMapping("/learn")
+  public List<Vocabulary> listVocabulary(){
+    return vocabularyService.getVocabularyNotLearnedByUserId(1);
+  }
+
 }

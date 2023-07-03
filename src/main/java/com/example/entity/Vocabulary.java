@@ -2,11 +2,9 @@ package com.example.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
 
@@ -19,7 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "vocabulary")
-public class VocabularyEntity {
+public class Vocabulary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +25,6 @@ public class VocabularyEntity {
     private long id;
 
     @NotBlank
-    @Length(min = 3, max = 100)
     @Column(name = "word")
     private String word;
     @NotBlank

@@ -1,6 +1,6 @@
 package com.example.dto;
 
-import com.example.entity.VocabularyEntity;
+import com.example.entity.Vocabulary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +19,5 @@ public class AddVocabularyContext {
 
     private MultipartFile audioWord;
     private MultipartFile audioSentence;
-    private VocabularyEntity vocabularyEntity;
+    private Vocabulary vocabulary;
 }

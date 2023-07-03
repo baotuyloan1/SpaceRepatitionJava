@@ -1,6 +1,6 @@
 package com.example.convertRequestParamToObject;
 
-import com.example.entity.VocabularyEntity;
+import com.example.entity.Vocabulary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +18,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class VocabularyUpload {
     private MultipartFile audioWord;
     private MultipartFile audioSentence;
-    private VocabularyEntity vocabularyEntity;
+    private Vocabulary vocabulary;
 }

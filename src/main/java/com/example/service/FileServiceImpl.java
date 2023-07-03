@@ -40,7 +40,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public InputStream getAudioFile(String path, String fileName, Long id) {
+    public InputStream getAudioFile(String path, String fileName) {
         String fullPath = path + File.separator + fileName;
         try {
             return new FileInputStream(fullPath);

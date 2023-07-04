@@ -111,4 +111,7 @@ public class VocabularyServiceImpl implements VocabularyService {
   public List<Vocabulary> getVocabularyNotLearnedByUserId(long id) {
     return vocabularyRepository.findAllNotLearnedBy(id);
   }
+
+
+
 }

@@ -1,9 +1,11 @@
-package com.example.service;
+package com.example.service.impl;
 
 import com.example.entity.Vocabulary;
 import com.example.exception.CustomerException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.repository.VocabularyRepository;
+import com.example.service.VocabularyService;
+import com.example.utils.FileUtils;
 import jakarta.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class VocabularyServiceImpl implements VocabularyService {
 
   private final VocabularyRepository vocabularyRepository;
+  private final FileUtils filenameUtils;
 
   @Value("${dir.resource.audioWord}")
   private String dirAudioWord;
@@ -33,8 +36,9 @@ public class VocabularyServiceImpl implements VocabularyService {
   @Value("${dir.resource.imgWord}")
   private String dirImgWord;
 
-  public VocabularyServiceImpl(VocabularyRepository vocabularyRepository) {
+  public VocabularyServiceImpl(VocabularyRepository vocabularyRepository, FileUtils filenameUtils) {
     this.vocabularyRepository = vocabularyRepository;
+    this.filenameUtils = filenameUtils;
   }
 
   @Transactional
@@ -49,16 +53,16 @@ public class VocabularyServiceImpl implements VocabularyService {
       Vocabulary savedWord = vocabularyRepository.save(vocabulary);
 
       // saveAudioWord, có nhiều extentions file mp3 khác nhau
-      String audioWordFileName = saveFile(audioWord, savedWord.getId(), dirAudioWord, "word");
+      String audioWordFileName = filenameUtils.saveFile(audioWord, savedWord.getId(), dirAudioWord, "word");
       savedWord.setAudioWord(audioWordFileName);
 
       // saveAudioSentence
       String audioSentenceFileName =
-          saveFile(audioSentence, savedWord.getId(), dirAudioSentence, "sentence");
+          filenameUtils.saveFile(audioSentence, savedWord.getId(), dirAudioSentence, "sentence");
       savedWord.setAudioSentence(audioSentenceFileName);
 
       // saveImage
-      String imageFileName = saveFile(img, savedWord.getId(), dirImgWord, "word");
+      String imageFileName = filenameUtils.saveFile(img, savedWord.getId(), dirImgWord, "word");
       savedWord.setImg(imageFileName);
 
       return vocabularyRepository.save(savedWord);
@@ -67,24 +71,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
   }
 
-  private String saveFile(MultipartFile audio, long id, String path, String audioType)
-      throws IOException {
-    String extension = FilenameUtils.getExtension(audio.getOriginalFilename());
-    StringBuilder absolutePath = new StringBuilder();
-    StringBuilder fileName = new StringBuilder();
-    fileName.append(id).append("_").append(audioType).append(".").append(extension);
-    absolutePath.append(path).append(File.separator).append(fileName);
-    File file = new File(path);
-    if (!file.exists()) {
-      file.mkdirs();
-    }
-    try {
-      Files.copy(audio.getInputStream(), Paths.get(absolutePath.toString()));
-    } catch (IOException e) {
-      throw new IOException(e);
-    }
-    return fileName.toString();
-  }
+
 
   @Override
   public Vocabulary getById(Long id) {

@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @RequestMapping("/api/vocabularies")
-@CrossOrigin(origins = "http://localhost:3000")
 public class VocabularyController {
 
   @Value("${dir.resource.audioWord}")

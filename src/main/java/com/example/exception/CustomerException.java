@@ -17,5 +17,7 @@ public class CustomerException extends  RuntimeException {
     private Throwable throwable;
     private  String message;
 
+    public CustomerException(String message){}
+
 
 }

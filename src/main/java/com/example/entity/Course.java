@@ -1,6 +1,7 @@
 package com.example.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,11 +26,14 @@ public class Course {
   @Column(columnDefinition = "nvarchar")
   private String title;
 
-  @Column( columnDefinition = "nvarchar")
-  private String target ;
+  @Column(columnDefinition = "nvarchar")
+  private String target;
 
-  @Column( columnDefinition = "ntext")
+  @Column(columnDefinition = "ntext")
   private String description;
+
   private String img;
-  
+
+  @OneToMany (mappedBy = "course")
+  private List<Topic> topic;
 }

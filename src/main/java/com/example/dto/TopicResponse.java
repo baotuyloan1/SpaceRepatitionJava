@@ -1,24 +1,23 @@
-package com.example.entity;
+package com.example.dto;
 
-import jakarta.persistence.*;
+import com.example.entity.Course;
+import com.example.entity.Vocabulary;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
- * @author BAO 7/5/2023
+ * @author BAO 7/7/2023
  */
-@Entity
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-public class Chapter {
+public class TopicResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
 
     private String titleEn;
@@ -26,9 +25,10 @@ public class Chapter {
     private String titleVn;
 
 
-    @ManyToOne
-    @JoinColumn(name = "course_id")
     private Course course;
+
+
+    private List<Vocabulary> vocabulary;
 
 
 

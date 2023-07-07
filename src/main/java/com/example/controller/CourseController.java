@@ -31,4 +31,6 @@ public class CourseController {
       @RequestPart("course") Course course, @RequestPart("img") MultipartFile img) {
     return new ResponseEntity<>(courseService.save(course, img), HttpStatus.CREATED);
   }
+
+
 }

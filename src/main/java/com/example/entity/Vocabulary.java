@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author BAO
@@ -54,5 +55,9 @@ public class Vocabulary {
 
     @Column(name = "img")
     private String img;
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
 
 }

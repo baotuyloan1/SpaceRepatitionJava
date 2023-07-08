@@ -2,11 +2,15 @@ package com.example.service.impl;
 
 import com.example.dto.TopicResponse;
 import com.example.entity.Topic;
+import com.example.entity.Vocabulary;
 import com.example.exception.CustomerException;
 import com.example.repository.TopicRepository;
 import com.example.service.TopicService;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,9 +35,11 @@ public class TopicServiceImpl implements TopicService {
     return topicRepository.findByCourseId(courseId);
   }
 
+
   @Override
   public List<TopicResponse> listAll() {
-    return listTopicToResponse(topicRepository.findAll());
+    List<Topic> topicResponses = topicRepository.findAll();
+    return listTopicToResponse(topicResponses);
   }
 
   @Override

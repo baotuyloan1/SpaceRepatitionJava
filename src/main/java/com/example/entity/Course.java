@@ -1,5 +1,7 @@
 package com.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -34,6 +36,11 @@ public class Course {
 
   private String img;
 
-  @OneToMany (mappedBy = "course")
+  @JsonIgnore
+  @OneToMany (mappedBy = "course", fetch = FetchType.LAZY)
   private List<Topic> topic;
+
+
+
+
 }

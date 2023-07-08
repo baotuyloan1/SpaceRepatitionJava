@@ -3,6 +3,8 @@ package com.example.controller;
 import com.example.entity.Course;
 import com.example.service.CourseService;
 import java.util.List;
+
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,11 @@ public class CourseController {
     this.courseService = courseService;
   }
 
+
   @GetMapping({"/", ""})
   public ResponseEntity<List<Course>> getAllCourses() {
-    return new ResponseEntity<>(courseService.listCourse(), HttpStatus.OK);
+    List<Course>  courseList= courseService.listCourse();
+    return new ResponseEntity<>(courseList, HttpStatus.OK);
   }
 
   @PostMapping({"/", ""})

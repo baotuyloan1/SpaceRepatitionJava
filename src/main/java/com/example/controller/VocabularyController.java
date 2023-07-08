@@ -168,7 +168,6 @@ public class VocabularyController {
       objectWords.add(word);
 
     }
-
     return objectWords;
   }
 }

@@ -29,6 +29,7 @@ public class Topic {
 
   private String titleVn;
 
+
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @ManyToOne
   @JoinColumn(name = "id_course")

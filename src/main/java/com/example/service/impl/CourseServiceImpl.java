@@ -1,19 +1,24 @@
 package com.example.service.impl;
 
 import com.example.entity.Course;
+import com.example.entity.Topic;
 import com.example.exception.CustomerException;
 import com.example.repository.CourseRepository;
 import com.example.service.CourseService;
 import com.example.utils.FileUtils;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
+
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -28,9 +33,12 @@ public class CourseServiceImpl implements CourseService {
   private final CourseRepository courseRepository;
   private final FileUtils fileUtils;
 
-  public CourseServiceImpl(CourseRepository courseRepository, FileUtils fileUtils) {
+  private final TransactionTemplate entityManager;
+
+  public CourseServiceImpl(CourseRepository courseRepository, FileUtils fileUtils, EntityManager entityManager, TransactionTemplate entityManager1) {
     this.courseRepository = courseRepository;
     this.fileUtils = fileUtils;
+    this.entityManager = entityManager1;
   }
 
   @Override
@@ -45,9 +53,12 @@ public class CourseServiceImpl implements CourseService {
     return courseRepository.findAll(pageable);
   }
 
+  @Transactional
   @Override
   public List<Course> listCourse() {
-    return courseRepository.findAll();
+    List<Course> a = courseRepository.findAll();
+    a.stream().map(Course::getTopic).forEach(Hibernate::initialize);
+    return a;
   }
 
 

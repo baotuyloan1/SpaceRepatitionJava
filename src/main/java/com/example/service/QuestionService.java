@@ -1,6 +1,10 @@
 package com.example.service;
 
+import com.example.dto.QuestionRequestDto;
 import com.example.entity.Question;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
 
 /**
  * @author BAO 7/8/2023
@@ -8,5 +12,11 @@ import com.example.entity.Question;
 
 
 public interface QuestionService {
-    Question save(Question question);
+    Question save(QuestionRequestDto question);
+
+    List<Question> listQuestion();
+
+    void deleteQuestion(Long questionId);
+
+    Question findById(Long questionId);
 }

@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,8 @@ public class Question {
     private String question;
 
 
-    @OneToOne
+    @JsonIgnoreProperties("question")
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "right_answer_id")
     private Answer answer;
 
@@ -38,11 +40,11 @@ public class Question {
     private Vocabulary vocabulary;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
 
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Transient
-    private String rightAnswer;
+
 }

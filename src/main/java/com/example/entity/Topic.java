@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,8 @@ public class Topic {
   @JoinColumn(name = "id_course")
   private Course course;
 
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+
+  @JsonIgnoreProperties({"question", "topic"})
   @OneToMany(mappedBy = "topic")
   private List<Vocabulary> vocabulary;
 }

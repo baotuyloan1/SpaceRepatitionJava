@@ -2,15 +2,12 @@ package com.example.service.impl;
 
 import com.example.dto.TopicResponse;
 import com.example.entity.Topic;
-import com.example.entity.Vocabulary;
 import com.example.exception.CustomerException;
 import com.example.repository.TopicRepository;
 import com.example.service.TopicService;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,22 +27,25 @@ public class TopicServiceImpl implements TopicService {
     return topicRepository.save(topic);
   }
 
+  @Transactional
   @Override
   public List<Topic> findByCourseId(int courseId) {
-    return topicRepository.findByCourseId(courseId);
+    return topicRepository.findByCourseId(courseId).stream()
+        .peek(topic -> topic.setVocabulary(null))
+        .collect(Collectors.toList());
   }
-
 
   @Override
   public List<TopicResponse> listAll() {
     List<Topic> topicResponses = topicRepository.findAll();
+
     return listTopicToResponse(topicResponses);
   }
 
   @Override
   public void deleteTopicById(int id) {
-      topicRepository.deleteById(id);
-      if (topicRepository.existsById(id)) throw new CustomerException("Something went wrong");
+    topicRepository.deleteById(id);
+    if (topicRepository.existsById(id)) throw new CustomerException("Something went wrong");
   }
 
   TopicResponse topicToResponse(Topic topic) {

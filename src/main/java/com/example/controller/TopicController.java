@@ -5,6 +5,8 @@ import com.example.entity.Course;
 import com.example.entity.Topic;
 import com.example.service.TopicService;
 import java.util.List;
+
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,7 @@ public class TopicController {
   }
 
 
+  @Transactional
   @GetMapping
   public ResponseEntity<List<TopicResponse>> getAll(){
     return new ResponseEntity<>(topicService.listAll(),HttpStatus.OK);

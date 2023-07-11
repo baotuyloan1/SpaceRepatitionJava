@@ -1,7 +1,10 @@
 package com.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,8 +20,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
+@EqualsAndHashCode
 @Table(name = "vocabulary")
-public class Vocabulary {
+public class    Vocabulary {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,8 +60,15 @@ public class Vocabulary {
     @Column(name = "img")
     private String img;
 
+    @JsonIgnoreProperties("vocabulary")
     @ManyToOne
     @JoinColumn(name = "topic_id")
     private Topic topic;
+
+
+    @OneToMany(mappedBy = "vocabulary")
+    private List<Question> question;
+
+
 
 }

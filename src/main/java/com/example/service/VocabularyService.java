@@ -1,9 +1,11 @@
 package com.example.service;
 
+import com.example.dto.admin.VocabularyAdminResponse;
 import com.example.entity.Vocabulary;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author BAO
@@ -20,5 +22,6 @@ public interface VocabularyService {
 
     List<Vocabulary> getAllVocabulary();
 
-    List<Vocabulary> getVocabularyNotLearnedByUserId(long id);
+
+    List<Map<String, Object>> getLearnVocabulary();
 }

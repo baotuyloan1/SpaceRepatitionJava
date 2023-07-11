@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.dto.DefaultFormatValidate;
+import com.example.dto.admin.VocabularyAdminResponse;
 import com.example.entity.Vocabulary;
 import com.example.service.FileService;
 import com.example.service.VocabularyService;
@@ -72,7 +73,7 @@ public class VocabularyController {
   }
 
   @GetMapping({"/", ""})
-  public ResponseEntity<List<Vocabulary>> getAllAudios() {
+  public ResponseEntity<List<Vocabulary>> getAllVocabulary() {
     return new ResponseEntity<>(vocabularyService.getAllVocabulary(), HttpStatus.OK);
   }
 
@@ -120,54 +121,6 @@ public class VocabularyController {
 
   @GetMapping("/learn")
   public List<Map<String, Object>> listVocabulary() {
-    List<Vocabulary> vocabularyList = vocabularyService.getVocabularyNotLearnedByUserId(1);
-
-    List<Map<String, Object>> objectWords = new LinkedList<>();
-
-    for (Vocabulary vocabulary : vocabularyList) {
-
-      Map<String, Object> word = new LinkedHashMap<>();
-      word.put("id", vocabulary.getId());
-      word.put("word", vocabulary);
-
-
-      List<Object> learningTypes = new LinkedList<>();
-
-
-      Map<String, Object> map = new LinkedHashMap<>();
-
-
-      /** Selection type */
-      // dùng foreach lấy từ bảng ra các đáp án của question id
-      List<String> listAnswer = new ArrayList();
-      listAnswer.add("Xin chào");
-      listAnswer.add("Tạm biệt");
-      listAnswer.add("Con ngựa");
-
-      map.put("id", 1);
-      map.put("type", "select");
-      map.put("question", "Hello My name is Bao?");
-      map.put("rightQuestionId", 1);
-      map.put("answers", listAnswer);
-      learningTypes.add(map);
-
-      /** Nghe phát âm từ và điền lại từ cho đúng */
-      Map<String, Object> listenMap = new LinkedHashMap<>();
-      listenMap.put("id", 2);
-      listenMap.put("type", "listen");
-      learningTypes.add(listenMap);
-
-      /** Hiển thị nghĩa của từ và ghi lại từ */
-      Map<String, Object> meanMap = new LinkedHashMap<>();
-      meanMap.put("id", 3);
-      meanMap.put("type", "mean");
-
-      learningTypes.add(meanMap);
-      word.put("learningTypes",learningTypes);
-
-      objectWords.add(word);
-
-    }
-    return objectWords;
+    return vocabularyService.getLearnVocabulary();
   }
 }

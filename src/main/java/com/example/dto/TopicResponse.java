@@ -2,6 +2,7 @@ package com.example.dto;
 
 import com.example.entity.Course;
 import com.example.entity.Vocabulary;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class TopicResponse {
     private Course course;
 
 
+    @JsonIgnoreProperties({"question", "topic"})
     private List<Vocabulary> vocabulary;
 
 

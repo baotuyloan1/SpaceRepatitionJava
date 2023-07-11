@@ -35,6 +35,7 @@ public class Question {
     @JoinColumn(name = "right_answer_id")
     private Answer answer;
 
+    @JsonIgnoreProperties("question")
     @ManyToOne
     @JoinColumn(name = "id_vocabulary")
     private Vocabulary vocabulary;
@@ -44,6 +45,7 @@ public class Question {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     private List<Answer> answerList;
+
 
 
 

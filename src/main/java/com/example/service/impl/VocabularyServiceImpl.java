@@ -153,7 +153,6 @@ public class VocabularyServiceImpl implements VocabularyService {
       Map<String, Object> meanMap = new LinkedHashMap<>();
       meanMap.put("id", 3);
       meanMap.put("type", "mean");
-
       learningTypes.add(meanMap);
       word.put("learningTypes", learningTypes);
 

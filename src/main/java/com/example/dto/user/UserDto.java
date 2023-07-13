@@ -26,11 +26,11 @@ public class UserDto {
     private RoleUser role;
 
     private String username;
-
+    private String password;
     private String firstName;
     private String lastName;
     private int countWords;
-    private String password;
+
 
 @Email
     private String email;

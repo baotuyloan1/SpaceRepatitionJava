@@ -4,5 +4,5 @@ package com.example.enums;
  */
 
 public enum RoleUser {
-    ROLE_ADMIN, ROLE_USER
+    ROLE_ADMIN, ROLE_USER, ROLE_MANAGEMENT
 }

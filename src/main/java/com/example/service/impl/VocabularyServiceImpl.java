@@ -1,18 +1,22 @@
 package com.example.service.impl;
 
-import com.example.entity.Answer;
-import com.example.entity.Question;
-import com.example.entity.Vocabulary;
+import com.example.entity.*;
 import com.example.exception.CustomerException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.repository.AnswerRepository;
+import com.example.repository.UserRepository;
+import com.example.repository.UserVocabularyRepository;
 import com.example.repository.VocabularyRepository;
+import com.example.security.services.UserDetailsImpl;
 import com.example.service.VocabularyService;
 import com.example.utils.FileUtils;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +29,10 @@ public class VocabularyServiceImpl implements VocabularyService {
   private final VocabularyRepository vocabularyRepository;
 
   private final AnswerRepository answerRepository;
+
+  private final UserRepository userRepository;
+
+  private final UserVocabularyRepository userVocabularyRepository;
   private final FileUtils filenameUtils;
 
   @Value("${dir.resource.audioWord}")
@@ -36,12 +44,16 @@ public class VocabularyServiceImpl implements VocabularyService {
   @Value("${dir.resource.imgWord}")
   private String dirImgWord;
 
+
+
   public VocabularyServiceImpl(
-      VocabularyRepository vocabularyRepository,
-      AnswerRepository answerRepository,
-      FileUtils filenameUtils) {
+          VocabularyRepository vocabularyRepository,
+          AnswerRepository answerRepository,
+          UserRepository userRepository, UserVocabularyRepository userVocabularyRepository, FileUtils filenameUtils) {
     this.vocabularyRepository = vocabularyRepository;
     this.answerRepository = answerRepository;
+    this.userRepository = userRepository;
+    this.userVocabularyRepository = userVocabularyRepository;
     this.filenameUtils = filenameUtils;
   }
 
@@ -104,10 +116,14 @@ public class VocabularyServiceImpl implements VocabularyService {
 
   //  @Transactional
   @Override
-  public List<Map<String, Object>> getLearnVocabulary() {
-
-    /** Tại sao không gọi chung multi join fetch trong 1 câu query ?. Sẽ bị lỗi Cartesian product. */
-    List<Vocabulary> vocabularyList = vocabularyRepository.findAllNotLearnedBy(1L, 12L);
+  public List<Map<String, Object>> getLearnVocabulary(int topicId) {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    /**
+     * Tại sao không gọi chung multi join fetch trong 1 câu query ?. Sẽ bị lỗi Cartesian product.
+     */
+    List<Vocabulary> vocabularyList =
+        vocabularyRepository.findAllNotLearnedBy(userDetails.getId(), topicId);
 
     List<Map<String, Object>> objectWords = new LinkedList<>();
 
@@ -130,8 +146,6 @@ public class VocabularyServiceImpl implements VocabularyService {
         map.put("id", 1);
         map.put("type", "select");
         map.put("question", currentQuestion);
-
-
 
         /** Selection type */
         // dùng foreach lấy từ bảng ra các đáp án của question id
@@ -160,4 +174,6 @@ public class VocabularyServiceImpl implements VocabularyService {
     }
     return objectWords;
   }
+
+
 }

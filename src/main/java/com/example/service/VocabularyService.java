@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.admin.VocabularyAdminResponse;
+import com.example.entity.UserVocabulary;
 import com.example.entity.Vocabulary;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,5 +24,7 @@ public interface VocabularyService {
     List<Vocabulary> getAllVocabulary();
 
 
-    List<Map<String, Object>> getLearnVocabulary();
+    List<Map<String, Object>> getLearnVocabulary(int topicId);
+
+
 }

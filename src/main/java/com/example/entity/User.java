@@ -4,10 +4,12 @@ import com.example.dto.user.UserDto;
 import com.example.enums.RoleUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author BAO 7/3/2023
@@ -26,11 +28,18 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Column(name = "role")
-  @Enumerated(EnumType.STRING)
-  private RoleUser role;
+
   @Column(name = "username", nullable = false, unique = true)
   private String username;
+
+  @ManyToMany(
+      fetch = FetchType.EAGER,
+      cascade = {CascadeType.PERSIST})
+  @JoinTable(
+      name = "user_role",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private List<Role> roles = new ArrayList<>();
 
   private String firstName;
   private String lastName;
@@ -38,19 +47,9 @@ public class User {
   private String password;
 
   @Email
-  @Column(name = "email",nullable = false, unique = false)
+  @Column(name = "email",nullable = false)
   private String email;
   private String phone;
 
-  public User(UserDto userDto){
-    this.id = userDto.getId();
-    this.role = userDto.getRole();
-    this.username = userDto.getUsername();
-    this.firstName = userDto.getFirstName();
-    this.lastName = userDto.getLastName();
-    this.countWords = userDto.getCountWords();
-    this.password = userDto.getPassword();
-    this.email = userDto.getEmail();
-    this.phone = userDto.getPhone();
-  }
+
 }

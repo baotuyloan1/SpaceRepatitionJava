@@ -119,8 +119,5 @@ public class VocabularyController {
     vocabularyService.update(vocabulary, audio);
   }
 
-  @GetMapping("/learn")
-  public List<Map<String, Object>> listVocabulary() {
-    return vocabularyService.getLearnVocabulary();
-  }
+
 }

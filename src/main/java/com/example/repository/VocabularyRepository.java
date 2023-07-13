@@ -21,5 +21,5 @@ public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
           + "LEFT JOIN FETCH  v.topic t "
           + "WHERE v.id NOT IN (SELECT uv.vocabulary.id FROM UserVocabulary uv "
           + "WHERE  uv.user.id = ?1) AND t.id = ?2")
-  List<Vocabulary> findAllNotLearnedBy(Long userId, Long topicId);
+  List<Vocabulary> findAllNotLearnedBy(Long userId, int topicId);
 }

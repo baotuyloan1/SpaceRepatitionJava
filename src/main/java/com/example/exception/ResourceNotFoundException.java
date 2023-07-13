@@ -18,4 +18,5 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 public class ResourceNotFoundException extends  RuntimeException {
     private boolean status;
     private String message;
+
 }

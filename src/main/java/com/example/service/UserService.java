@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.dto.user.UserDto;
 import com.example.entity.User;
+import com.example.payload.request.SignupRequest;
 import org.springframework.http.HttpStatusCode;
 
 import java.util.List;
@@ -13,5 +14,9 @@ public interface UserService {
 
     List<User> getAllUser();
 
-    User signUpUser(UserDto user);
+    User signUpUser(SignupRequest user);
+
+    boolean exitsByUserName(String username);
+
+    boolean exitsByEmail(String email);
 }

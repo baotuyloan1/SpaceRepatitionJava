@@ -116,7 +116,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
   //  @Transactional
   @Override
-  public List<Map<String, Object>> getLearnVocabulary(int topicId) {
+  public List<Map<String, Object>>  getLearnVocabulary(int topicId) {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     /**

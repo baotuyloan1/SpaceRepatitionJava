@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.util.WebUtils;
 
 /**
@@ -36,12 +37,17 @@ public class JwtUtils {
     return ResponseCookie.from(jwtCookie).path("/api").build();
   }
 
-  public String getJwtFromCookies(HttpServletRequest request) {
+  public String getJwtFromCookiesOrHeader(HttpServletRequest request) {
     Cookie cookie = WebUtils.getCookie(request, jwtCookie);
     if (cookie != null) {
       return cookie.getValue();
     } else {
-      return null;
+      String bearerToken = request.getHeader("Authorization");
+      if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
+        return bearerToken.substring(7);
+      }else {
+        return null;
+      }
     }
   }
 
@@ -90,5 +96,9 @@ public class JwtUtils {
         .maxAge(24 * 60 * 60L)
         .httpOnly(true)
         .build();
+  }
+
+  public String generateJwtToken(UserDetailsImpl userDetails) {
+    return generateTokenFromUserName(userDetails.getUsername());
   }
 }

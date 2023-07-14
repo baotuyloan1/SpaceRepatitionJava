@@ -1,5 +1,7 @@
 package com.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -21,19 +23,21 @@ public class UserVocabulary {
   @EmbeddedId private UserVocabularyId id;
 
   @ManyToOne
-  @MapsId("userId")
-  @JoinColumn(name = "id_user")
+  @MapsId("id")
+  @JsonIgnore
+  @JoinColumn(name = "id_user", referencedColumnName = "id")
   private User user;
 
   @ManyToOne
-  @MapsId("vocabularyId")
-  @JoinColumn(name = "id_vocabulary")
+  @MapsId("id")
+  @JoinColumn(name = "id_vocabulary",referencedColumnName = "id")
+  @JsonIgnoreProperties("question")
   private Vocabulary vocabulary;
 
   @Column(name = "submit_date", columnDefinition = "datetime")
   private Date submitDate;
 
-  @Column(name = "current_FE")
+  @Column(name = "current_FE", columnDefinition = "DECIMAL(4,3)")
   private float currentFE;
 
   private Date endDate;

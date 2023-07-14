@@ -75,10 +75,12 @@ public class WebSecurityConfig {
                     .hasAnyAuthority(RoleUser.ROLE_ADMIN.name(), RoleUser.ROLE_MANAGEMENT.name())
                     .requestMatchers("/api/users/signup")
                     .permitAll()
-                        .requestMatchers("/api/users/signin")
-                        .permitAll()
+                    .requestMatchers("/api/users/signin")
+                    .permitAll()
                     .requestMatchers("/api/users/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
+                    .requestMatchers("/api/mobile/users/**")
+                    .hasAnyAuthority(RoleUser.ROLE_USER.name(), RoleUser.ROLE_ADMIN.name())
                     .anyRequest()
                     .permitAll());
 

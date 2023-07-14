@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import com.example.dto.user.UserVocabularyRequest;
+import com.example.entity.UserVocabulary;
 import com.example.payload.request.LoginRequest;
 import com.example.payload.request.SignupRequest;
 import com.example.payload.response.MessageResponse;
@@ -52,20 +54,9 @@ public class UserController {
 
   @PostMapping({"/signup"})
   public ResponseEntity<?> singUpUser(@RequestBody SignupRequest signupRequest) {
-    if (userService.exitsByUserName(signupRequest.getUsername())) {
-      return ResponseEntity.badRequest()
-          .body(
-              new MessageResponse(
-                  HttpStatus.BAD_REQUEST.value(), "Error: Username is already taken!!"));
-    }
-    if (userService.exitsByEmail(signupRequest.getEmail())) {
-      return ResponseEntity.badRequest()
-          .body(
-              new MessageResponse(
-                  HttpServletResponse.SC_BAD_REQUEST, "Error: Email is already in use!"));
-    }
+    ResponseEntity<MessageResponse> BAD_REQUEST = userService.checkValidSignupRequest(signupRequest);
+    if (BAD_REQUEST != null) return BAD_REQUEST;
     userService.signUpUser(signupRequest);
-
     return ResponseEntity.ok(
         new MessageResponse(HttpServletResponse.SC_CREATED, "User registered successfully"));
   }
@@ -106,7 +97,19 @@ public class UserController {
   @PostMapping("/learn/newVocabulary")
   public ResponseEntity<?> saveLearnedVocabulary(@RequestBody long idVocabulary){
     userVocabularyService.saveNewLearnedVocabulary(idVocabulary);
-    return new ResponseEntity<>("Saved learned word",  HttpStatus.OK);
+    return new ResponseEntity<>("Saved learned word",  HttpStatus.CREATED);
+  }
+
+  @PostMapping("/learn/updateVocabulary")
+  public ResponseEntity<?> updateLeanredVocabulary(@RequestBody UserVocabularyRequest userVocabularyRequest){
+    userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
+    return new ResponseEntity<>("Updated learned word", HttpStatus.OK);
+  }
+
+
+  @GetMapping("/learn/getNextTimeToReview")
+  public ResponseEntity<?> getTimeToReview(){
+    return ResponseEntity.ok().body(userVocabularyService.getNextTimeToReview());
   }
 
 

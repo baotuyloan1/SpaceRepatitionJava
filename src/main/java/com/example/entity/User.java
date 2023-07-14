@@ -2,6 +2,7 @@ package com.example.entity;
 
 import com.example.dto.user.UserDto;
 import com.example.enums.RoleUser;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -39,6 +40,7 @@ public class User {
       name = "user_role",
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @JsonIgnoreProperties("users")
   private List<Role> roles = new ArrayList<>();
 
   private String firstName;

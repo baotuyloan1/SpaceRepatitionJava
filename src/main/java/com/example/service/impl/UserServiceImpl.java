@@ -3,15 +3,21 @@ package com.example.service.impl;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.enums.RoleUser;
+import com.example.exception.ResourceNotFoundException;
 import com.example.payload.request.SignupRequest;
+import com.example.payload.response.MessageResponse;
 import com.example.repository.RoleRepository;
 import com.example.repository.UserRepository;
 import com.example.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -81,5 +87,27 @@ public class UserServiceImpl implements UserService {
   @Override
   public boolean exitsByEmail(String email) {
     return userRepository.existsByEmail(email);
+  }
+
+  @Override
+  public ResponseEntity<MessageResponse> checkValidSignupRequest(SignupRequest signupRequest) {
+    if (exitsByUserName(signupRequest.getUsername())) {
+      return ResponseEntity.badRequest()
+              .body(
+                      new MessageResponse(
+                              HttpStatus.BAD_REQUEST.value(), "Error: Username is already taken!!"));
+    }
+    if (exitsByEmail(signupRequest.getEmail())) {
+      return ResponseEntity.badRequest()
+              .body(
+                      new MessageResponse(
+                              HttpServletResponse.SC_BAD_REQUEST, "Error: Email is already in use!"));
+    }
+    return null;
+  }
+
+  @Override
+  public User getInfoById(Long id) {
+    return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(false,"User not found"));
   }
 }

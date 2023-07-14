@@ -1,0 +1,23 @@
+package com.example.dto.user;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.Date;
+
+/**
+ * @author BAO 7/14/2023
+ */
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class NextTimeReviewResonse {
+
+    private Date nextTime;
+
+    private int totalWord;
+}

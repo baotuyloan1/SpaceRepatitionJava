@@ -14,11 +14,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class UserVocabularyId implements Serializable {
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "id_user")
+    private long userId;
 
-    @Column(name = "vocabulary_id")
-    private Long vocabularyId;
+    @Column(name = "id_vocabulary")
+    private long vocabularyId;
 
 
 }

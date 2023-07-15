@@ -43,9 +43,9 @@ public class JwtUtils {
       return cookie.getValue();
     } else {
       String bearerToken = request.getHeader("Authorization");
-      if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")){
+      if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
         return bearerToken.substring(7);
-      }else {
+      } else {
         return null;
       }
     }
@@ -92,7 +92,7 @@ public class JwtUtils {
   public ResponseCookie generateJwtCookie(UserDetailsImpl userDetails) {
     String jwt = generateTokenFromUserName(userDetails.getUsername());
     return ResponseCookie.from(jwtCookie, jwt)
-        .path("/api")
+        .path("/")
         .maxAge(24 * 60 * 60L)
         .httpOnly(true)
         .build();

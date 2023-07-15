@@ -71,18 +71,16 @@ public class WebSecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api/management/**")
+                auth.requestMatchers("/api/admin/**")
                     .hasAnyAuthority(RoleUser.ROLE_ADMIN.name(), RoleUser.ROLE_MANAGEMENT.name())
-                    .requestMatchers("/api/users/signup")
+                    .requestMatchers("/api/auth/**")
                     .permitAll()
-                    .requestMatchers("/api/users/signin")
-                    .permitAll()
-                    .requestMatchers("/api/users/**")
+                    .requestMatchers("/api/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
-                    .requestMatchers("/api/mobile/users/**")
-                    .hasAnyAuthority(RoleUser.ROLE_USER.name(), RoleUser.ROLE_ADMIN.name())
+                    .requestMatchers("/api/mobile/user/**")
+                    .hasAnyAuthority(RoleUser.ROLE_USER.name())
                     .anyRequest()
-                    .permitAll());
+                    .authenticated());
 
     httpSecurity.authenticationProvider(authenticationProvider());
     httpSecurity.addFilterBefore(

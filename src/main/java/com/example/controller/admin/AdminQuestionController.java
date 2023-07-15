@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.controller.admin;
 
 import com.example.dto.QuestionRequestDto;
 import com.example.entity.Question;
@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.*;
  * @author BAO 7/8/2023
  */
 @RestController
-@RequestMapping("/api/questions")
-public class QuestionController {
+@RequestMapping("/api/admin/questions")
+public class AdminQuestionController {
 
   private final QuestionService questionService;
 
-  public QuestionController(QuestionService questionService) {
+  public AdminQuestionController(QuestionService questionService) {
     this.questionService = questionService;
   }
 

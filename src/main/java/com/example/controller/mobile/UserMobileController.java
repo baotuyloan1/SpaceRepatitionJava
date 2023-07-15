@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 
 @RestController
-@RequestMapping("/api/mobile/users")
+@RequestMapping("/api/mobile/user")
 public class UserMobileController {
 
     private final UserService userService;

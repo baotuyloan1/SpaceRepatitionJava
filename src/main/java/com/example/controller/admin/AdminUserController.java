@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.controller.admin;
 
 import com.example.entity.User;
 import com.example.service.UserService;
@@ -14,11 +14,11 @@ import java.util.List;
  * @author BAO 7/13/2023
  */
 @RestController
-@RequestMapping("/api/management")
-public class ManageController {
+@RequestMapping("/api/admin/users")
+public class AdminUserController {
     private final UserService userService;
 
-    public ManageController(UserService userService) {
+    public AdminUserController(UserService userService) {
         this.userService = userService;
     }
 

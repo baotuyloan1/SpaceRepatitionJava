@@ -80,7 +80,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/mobile/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
                     .anyRequest()
-                    .authenticated());
+                    .permitAll());
 
     httpSecurity.authenticationProvider(authenticationProvider());
     httpSecurity.addFilterBefore(

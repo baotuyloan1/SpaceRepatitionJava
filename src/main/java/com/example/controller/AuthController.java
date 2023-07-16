@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.user.LearnedVocabularyRequest;
 import com.example.payload.request.LoginRequest;
 import com.example.payload.request.SignupRequest;
 import com.example.payload.response.MessageResponse;
@@ -7,10 +8,12 @@ import com.example.payload.response.UserInfoResponse;
 import com.example.security.jwt.JwtUtils;
 import com.example.security.services.UserDetailsImpl;
 import com.example.service.UserService;
+import com.example.service.UserVocabularyService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,13 +33,15 @@ public class AuthController {
   private final UserService userService;
 
   private final AuthenticationManager authenticationManager;
+  private final UserVocabularyService userVocabularyService;
 
   private final JwtUtils jwtUtils;
 
   public AuthController(
-      UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+          UserService userService, AuthenticationManager authenticationManager, UserVocabularyService userVocabularyService, JwtUtils jwtUtils) {
     this.userService = userService;
     this.authenticationManager = authenticationManager;
+    this.userVocabularyService = userVocabularyService;
     this.jwtUtils = jwtUtils;
   }
 
@@ -49,6 +54,8 @@ public class AuthController {
     return ResponseEntity.ok(
         new MessageResponse(HttpServletResponse.SC_CREATED, "User registered successfully"));
   }
+
+
 
   /**
    * Khi muốn chia sẽ cookie từ BE đến FE khác origin thì phải dùng allowCredentials= true Mặc định

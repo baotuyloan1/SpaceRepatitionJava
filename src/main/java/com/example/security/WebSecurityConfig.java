@@ -17,6 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 /**
  * @author BAO 7/12/2023
@@ -62,10 +67,25 @@ public class WebSecurityConfig {
     return authConfig.getAuthenticationManager();
   }
 
+  /**
+   * Khi dùng permitAll() thì các Spring Security cho phép tất cả các yêu cầu đi qua mà không cần xác thức 1 cái gì hết. Bao gồm cả yêu cầu từ các origin khác và các request cùng origin
+   *
+   * khi dùng post đi qua permitAll() nó cho phép cookie được gửi di vì nó không các xác thực 1 cái gì hết
+   *
+   * còn khi áp dụng các bảo mật chi tiết, các giới hạn CORS sẽ được áp dụng và các yêu cầu khác origin sẽ bị từ chối nếu không cấu hình CORS cho phép.
+   *
+   * Spring security tích hợp sẵn 1 bộ lọc CORS mặc định, chỉ hỗ  trợ same origin. Bộ lọc CORS này cho phép yêu cầu từ nguồn khác nhưng chỉ cho phương thức GET
+   *
+   * Điều này có nghĩa là mặc định, bộ loc CORS trong spring security của spring boot, chỉ cho phép yêu cầu GET từ các nguồn khác
+   * @param httpSecurity
+   * @return
+   * @throws Exception
+   */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
         .csrf(AbstractHttpConfigurer::disable)
+            .cors(config -> config.configurationSource(corsConfigurationSource()))
         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -80,12 +100,24 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/mobile/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
                     .anyRequest()
-                    .permitAll());
+                    .hasAnyAuthority(RoleUser.ROLE_USER.name()));
 
     httpSecurity.authenticationProvider(authenticationProvider());
     httpSecurity.addFilterBefore(
         authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
     return httpSecurity.build();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Cho phép yêu cầu từ nguồn gốc http://localhost:3000
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+    configuration.setAllowedHeaders(Arrays.asList("*"));
+    configuration.setAllowCredentials(true); // Cho phép chia sẻ cookies
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
   }
 }

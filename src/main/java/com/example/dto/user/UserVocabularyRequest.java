@@ -15,7 +15,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserVocabularyRequest {
 
-    private long vocabularyId;
+    private long idVocabulary;
 
-    private String isRightAnswer;
+    private boolean rightAnswer;
+
+
 }

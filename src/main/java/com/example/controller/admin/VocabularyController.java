@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.controller.admin;
 
 import com.example.dto.DefaultFormatValidate;
 import com.example.dto.admin.VocabularyAdminResponse;
@@ -83,6 +83,23 @@ public class VocabularyController {
   }
 
   //      @GetMapping(value = "/playAudio/{id}", produces = MediaType.ALL_VALUE)
+
+
+  // Api for uploading audio after posting titles and other audio
+  //    @PostMapping("/post/{id}")
+  //    public WordEntity uploadingAudio(@RequestParam("audio") MultipartFile audio, @PathVariable
+  // Long id) throws IOException {
+  //        WordEntity wordEntity = wordService.getById(id);
+  //        FileModel fileModel = fileService.uploadAudio(path, audio);
+  //        wordEntity.setAudioName(fileModel.getAudioFileName());
+  //        return wordService.update(wordEntity, audio);
+  //    }
+
+  @PutMapping(value = {"", "/"})
+  public void updateWord(
+      @RequestBody Vocabulary vocabulary, @RequestParam("audio") MultipartFile audio) {
+    vocabularyService.update(vocabulary, audio);
+  }
   @GetMapping(value = "/playAudio/{fileName}")
   public void playAudio(@PathVariable String fileName, HttpServletResponse response) {
 
@@ -103,21 +120,6 @@ public class VocabularyController {
     }
   }
 
-  // Api for uploading audio after posting titles and other audio
-  //    @PostMapping("/post/{id}")
-  //    public WordEntity uploadingAudio(@RequestParam("audio") MultipartFile audio, @PathVariable
-  // Long id) throws IOException {
-  //        WordEntity wordEntity = wordService.getById(id);
-  //        FileModel fileModel = fileService.uploadAudio(path, audio);
-  //        wordEntity.setAudioName(fileModel.getAudioFileName());
-  //        return wordService.update(wordEntity, audio);
-  //    }
-
-  @PutMapping(value = {"", "/"})
-  public void updateWord(
-      @RequestBody Vocabulary vocabulary, @RequestParam("audio") MultipartFile audio) {
-    vocabularyService.update(vocabulary, audio);
-  }
 
 
 }

@@ -71,22 +71,51 @@ public class UserController {
   }
 
 
-  @PostMapping("/learn/saveLearnedVocabulary")
+  @PostMapping("/saveNewWord")
   public ResponseEntity<?> saveLearnedVocabulary(@RequestBody LearnedVocabularyRequest learnedVocabularyRequest){
     userVocabularyService.saveNewLearnedVocabulary(learnedVocabularyRequest.getIdVocabulary());
     return new ResponseEntity<>("Saved learned word",  HttpStatus.CREATED);
   }
 
-  @PostMapping("/learn/updateVocabulary")
+  @PostMapping("/signin")
+  public ResponseEntity<UserInfoResponse> singInUser(@RequestBody LoginRequest loginRequest) {
+    Authentication authentication =
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(), loginRequest.getPassword()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+    List<String> roles =
+            userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
+
+    HttpHeaders headers = new HttpHeaders();
+    /**
+     * THong bao cho trình duyệt biết máy chủ đồng ý chia sẻ cookie và thông tin xác thực
+     * do cấu hiình bên MvcConfig rồi nên không cần cấu hình lại
+     */
+//    headers.add("Access-Control-Allow-Credentials","true");
+//    headers.add("Access-Control-Allow-Origin", "http://localhost:3000");
+    headers.add(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+    return ResponseEntity.ok()
+            .headers(headers)
+            .body(
+                    new UserInfoResponse(
+                            userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+  }
+
+  @PostMapping("/updateVocabulary")
   public ResponseEntity<?> updateLeanredVocabulary(@RequestBody UserVocabularyRequest userVocabularyRequest){
     userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
     return new ResponseEntity<>("Updated learned word", HttpStatus.OK);
   }
 
 
-  @GetMapping("/learn/getNextTimeToReview")
+  @GetMapping("/getNextWordToReview")
   public ResponseEntity<?> getTimeToReview(){
-    return ResponseEntity.ok().body(userVocabularyService.getNextTimeToReview());
+    return ResponseEntity.ok().body(userVocabularyService.getNextWordToReview());
   }
 
 

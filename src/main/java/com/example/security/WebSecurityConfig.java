@@ -101,21 +101,19 @@ public class WebSecurityConfig {
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
                     .anyRequest()
                     .hasAnyAuthority(RoleUser.ROLE_USER.name()));
-
     httpSecurity.authenticationProvider(authenticationProvider());
     httpSecurity.addFilterBefore(
         authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-
     return httpSecurity.build();
   }
 
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Cho phép yêu cầu từ nguồn gốc http://localhost:3000
+    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
-    configuration.setAllowCredentials(true); // Cho phép chia sẻ cookies
+    configuration.setAllowCredentials(true);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;

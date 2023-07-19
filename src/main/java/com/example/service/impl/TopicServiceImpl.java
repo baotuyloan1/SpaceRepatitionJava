@@ -27,12 +27,9 @@ public class TopicServiceImpl implements TopicService {
     return topicRepository.save(topic);
   }
 
-  @Transactional
   @Override
   public List<Topic> findByCourseId(int courseId) {
-    return topicRepository.findByCourseId(courseId).stream()
-        .peek(topic -> topic.setVocabulary(null))
-        .collect(Collectors.toList());
+    return topicRepository.findByCourseId(courseId);
   }
 
   @Override

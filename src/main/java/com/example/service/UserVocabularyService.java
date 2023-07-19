@@ -17,4 +17,6 @@ public interface UserVocabularyService {
   UserVocabulary updateLearnedVocabulary(UserVocabularyRequest userVocabularyRequest);
 
   List<Map<String, Object>> getNextWordToReview();
+
+
 }

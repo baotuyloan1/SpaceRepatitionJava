@@ -1,4 +1,4 @@
-package com.example.payload.request;
+package com.example.dto;
 
 import com.example.enums.RoleUser;
 import lombok.AllArgsConstructor;
@@ -6,18 +6,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author BAO 7/12/2023
+ * @author BAO 7/19/2023
  */
-@Getter
+
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupRequest {
-
+public abstract class SignUpRequest {
     private long id;
     private String username;
     private String firstName;
@@ -25,5 +24,5 @@ public class SignupRequest {
     private String password;
     private String email;
     private String phone;
-    private Set<RoleUser> roles = new HashSet<>();
+    private Set<RoleUser> roles;
 }

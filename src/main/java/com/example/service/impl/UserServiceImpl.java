@@ -1,24 +1,23 @@
 package com.example.service.impl;
 
-import com.example.entity.Role;
-import com.example.entity.User;
-import com.example.enums.RoleUser;
+import com.example.dto.user.UserCourseResponse;
+import com.example.dto.user.UserTopicRes;
+import com.example.entity.*;
 import com.example.exception.ResourceNotFoundException;
-import com.example.payload.request.SignupRequest;
-import com.example.payload.response.MessageResponse;
-import com.example.repository.RoleRepository;
+import com.example.mapper.CourseMapper;
+import com.example.mapper.TopicMapper;
+import com.example.repository.CourseRepository;
 import com.example.repository.UserRepository;
+import com.example.security.services.UserDetailsImpl;
+import com.example.service.TopicService;
 import com.example.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.service.VocabularyService;
 import jakarta.transaction.Transactional;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,16 +26,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
-  private final PasswordEncoder passwordEncoder;
+  private final TopicService topicService;
+  private final TopicMapper topicMapper;
+  private final CourseRepository courseRepository;
+  private final CourseMapper courseMapper;
+  private final VocabularyService vocabularyService;
 
   public UserServiceImpl(
       UserRepository userRepository,
-      RoleRepository roleRepository,
-      PasswordEncoder passwordEncoder) {
+      TopicService topicService,
+      TopicMapper topicMapper,
+      CourseRepository courseRepository,
+      CourseMapper courseMapper,
+      VocabularyService vocabularyService) {
     this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
-    this.passwordEncoder = passwordEncoder;
+    this.topicService = topicService;
+    this.topicMapper = topicMapper;
+    this.courseRepository = courseRepository;
+    this.courseMapper = courseMapper;
+    this.vocabularyService = vocabularyService;
   }
 
   @Override
@@ -44,70 +52,40 @@ public class UserServiceImpl implements UserService {
     return userRepository.findAll();
   }
 
-  @Transactional(rollbackOn = Exception.class)
   @Override
-  public User signUpUser(SignupRequest signupRequest) {
-    Set<RoleUser> enumRoles = signupRequest.getRoles();
-    List<Role> roles = new LinkedList<>();
-      if (enumRoles == null || enumRoles.isEmpty()) {
-      Role userRole =
-          roleRepository
-              .findByName(RoleUser.ROLE_USER)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
-      roles.add(userRole);
-    } else {
-      enumRoles.forEach(
-          roleUser -> {
-            Role role =
-                roleRepository
-                    .findByName(roleUser)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
-            roles.add(role);
-          });
-    }
-    User user =
-        new User(
-            signupRequest.getId(),
-            signupRequest.getUsername(),
-                roles,
-            signupRequest.getFirstName(),
-            signupRequest.getLastname(),
-            0,
-            passwordEncoder.encode(signupRequest.getPassword()),
-            signupRequest.getEmail(),
-            signupRequest.getPhone());
-    return userRepository.save(user);
+  public User getUserById(Long id) {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(false, "User not found"));
   }
 
   @Override
-  public boolean exitsByUserName(String username) {
-    return userRepository.existsByUsername(username);
+  public List<UserCourseResponse> getListCourses() {
+    List<Course> courseList = courseRepository.findAll();
+    return courseMapper.coursesToCoursesUserResponse(courseList);
   }
 
+  @Transactional
   @Override
-  public boolean exitsByEmail(String email) {
-    return userRepository.existsByEmail(email);
+  public List<UserTopicRes> findTopicByCourseId(int courseId) {
+    List<Topic> topics = topicService.findByCourseId(courseId);
+
+    return topics.stream()
+        .map(
+            topic ->
+                new UserTopicRes(
+                    topic.getId(), topic.getTitleEn(), topic.getTitleVn(), isLearnedAll(topic)))
+        .collect(Collectors.toList());
   }
 
-  @Override
-  public ResponseEntity<MessageResponse> checkValidSignupRequest(SignupRequest signupRequest) {
-    if (exitsByUserName(signupRequest.getUsername())) {
-      return ResponseEntity.badRequest()
-              .body(
-                      new MessageResponse(
-                              HttpStatus.BAD_REQUEST.value(), "Error: Username is already taken!!"));
-    }
-    if (exitsByEmail(signupRequest.getEmail())) {
-      return ResponseEntity.badRequest()
-              .body(
-                      new MessageResponse(
-                              HttpServletResponse.SC_BAD_REQUEST, "Error: Email is already in use!"));
-    }
-    return null;
-  }
-
-  @Override
-  public User getInfoById(Long id) {
-    return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(false,"User not found"));
+  private boolean isLearnedAll(Topic topic) {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    List<Vocabulary> vocabularies = topic.getVocabulary();
+    /** Lấy ra từ đã học của người dùng trong topic này */
+    List<Vocabulary> learnedVocabularies =
+        vocabularyService.getLearnedWordByTopicAndUserId(topic, userDetails.getId());
+    /** convert thành set để tăng performance, list phải duyệt qua từng phần tử */
+    return new HashSet<>(learnedVocabularies).containsAll(vocabularies) && !vocabularies.isEmpty();
   }
 }

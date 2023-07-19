@@ -150,13 +150,10 @@ public class VocabularyServiceImpl implements VocabularyService {
         /** Selection type */
         // dùng foreach lấy từ bảng ra các đáp án của question id
         List<Answer> listAnswer = answerRepository.findByQuestionId(currentQuestion.getId());
-
         map.put("answers", listAnswer);
-
         map.put("rightQuestionId", currentQuestion.getAnswer().getId());
         learningTypes.add(map);
       }
-
       /** Nghe phát âm từ và điền lại từ cho đúng */
       Map<String, Object> listenMap = new LinkedHashMap<>();
       listenMap.put("id", 2);
@@ -173,6 +170,11 @@ public class VocabularyServiceImpl implements VocabularyService {
       objectWords.add(word);
     }
     return objectWords;
+  }
+
+  @Override
+  public List<Vocabulary> getLearnedWordByTopicAndUserId(Topic topic, Long userId) {
+    return vocabularyRepository.findLearnedWordByTopicAndUserId(topic.getId(), userId);
   }
 
 

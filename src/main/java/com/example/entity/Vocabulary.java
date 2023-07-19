@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,4 +71,18 @@ public class Vocabulary {
 
   @OneToMany(mappedBy = "vocabulary")
   private List<Question> question;
+
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Vocabulary that = (Vocabulary) o;
+    return id == that.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 }

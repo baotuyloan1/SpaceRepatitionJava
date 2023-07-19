@@ -1,17 +1,13 @@
 package com.example.controller;
 
-import com.example.dto.user.LearnedVocabularyRequest;
+import com.example.dto.user.auth.UserSignInResponse;
+import com.example.dto.user.auth.UserSignUpRequest;
+import com.example.exception.ErrorResponse;
 import com.example.payload.request.LoginRequest;
-import com.example.payload.request.SignupRequest;
 import com.example.payload.response.MessageResponse;
-import com.example.payload.response.UserInfoResponse;
-import com.example.security.jwt.JwtUtils;
 import com.example.security.services.UserDetailsImpl;
-import com.example.service.UserService;
-import com.example.service.UserVocabularyService;
+import com.example.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -19,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,32 +24,40 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth/")
 public class AuthController {
 
-  private final UserService userService;
+  private final AuthService authService;
 
   private final AuthenticationManager authenticationManager;
-  private final UserVocabularyService userVocabularyService;
 
-  private final JwtUtils jwtUtils;
-
-  public AuthController(
-          UserService userService, AuthenticationManager authenticationManager, UserVocabularyService userVocabularyService, JwtUtils jwtUtils) {
-    this.userService = userService;
+  public AuthController(AuthService authService, AuthenticationManager authenticationManager) {
+    this.authService = authService;
     this.authenticationManager = authenticationManager;
-    this.userVocabularyService = userVocabularyService;
-    this.jwtUtils = jwtUtils;
+  }
+
+  private ResponseEntity<?> badRequest(String message) {
+    return ResponseEntity.badRequest()
+        .body(
+            new ErrorResponse(
+                "error",
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.toString(),
+                message));
   }
 
   @PostMapping({"/signup"})
-  public ResponseEntity<?> singUpUser(@RequestBody SignupRequest signupRequest) {
-    ResponseEntity<MessageResponse> BAD_REQUEST =
-        userService.checkValidSignupRequest(signupRequest);
-    if (BAD_REQUEST != null) return BAD_REQUEST;
-    userService.signUpUser(signupRequest);
-    return ResponseEntity.ok(
-        new MessageResponse(HttpServletResponse.SC_CREATED, "User registered successfully"));
+  public ResponseEntity<?> singUpUser(@RequestBody UserSignUpRequest signUpRequest) {
+    boolean isExistsUserName = authService.isExistUserName(signUpRequest.getUsername());
+    boolean isExistsEmail = authService.isExistEmail(signUpRequest.getEmail());
+    if (isExistsEmail && isExistsUserName) {
+      return badRequest("Username and is email is exist");
+    } else {
+      if (isExistsEmail) {
+        return badRequest("Email is exist");
+      } else if (isExistsUserName) {
+        return badRequest("Username is exist");
+      }
+    }
+    return new ResponseEntity<>(authService.signUpUser(signUpRequest), HttpStatus.CREATED);
   }
-
-
 
   /**
    * Khi muốn chia sẽ cookie từ BE đến FE khác origin thì phải dùng allowCredentials= true Mặc định
@@ -66,44 +68,27 @@ public class AuthController {
    * trong @CrossOrigin cùng với origins. Điều này báo hiệu cho trình duyệt rằng máy chủ đồng ý chia
    * sẻ cookie và thông tin xác thục cho các yêu cầu từ nguồn được chỉ định trong origins;
    *
-   * Có 2 cách 1 là như này, còn 2 có thể thêm vào header
+   * <p>Có 2 cách 1 là như này, còn 2 có thể thêm vào header
    *
    * @param loginRequest
    * @return
    */
-//  @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
   @PostMapping("/signin")
-  public ResponseEntity<UserInfoResponse> singInUser(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<UserSignInResponse> signInUser(@RequestBody LoginRequest loginRequest) {
     Authentication authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-    List<String> roles =
-        userDetails.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList());
-
+    UserDetailsImpl userDetails = authService.login(authentication);
+    ResponseCookie cookieJwt = authService.generateResponseCookie(userDetails);
     HttpHeaders headers = new HttpHeaders();
-    /**
-     * THong bao cho trình duyệt biết máy chủ đồng ý chia sẻ cookie và thông tin xác thực
-     * do cấu hiình bên MvcConfig rồi nên không cần cấu hình lại
-     */
-//    headers.add("Access-Control-Allow-Credentials","true");
-//    headers.add("Access-Control-Allow-Origin", "http://localhost:3000");
-    headers.add(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-    return ResponseEntity.ok()
-        .headers(headers)
-        .body(
-            new UserInfoResponse(
-                userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles));
+    headers.add(HttpHeaders.SET_COOKIE, cookieJwt.toString());
+    return ResponseEntity.ok().headers(headers).body(authService.getInfoUserSignIn(userDetails));
   }
 
-  @PostMapping("/sigout")
+  @PostMapping("/signout")
   public ResponseEntity<?> logoutUser() {
-    ResponseCookie cookie = jwtUtils.getClearnJwtCookie();
+    ResponseCookie cookie = authService.getClearnJwtCookie();
     return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, cookie.toString())
         .body(new MessageResponse(HttpServletResponse.SC_OK, "You've been signed out!"));

@@ -51,7 +51,6 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   private UserVocabulary saveLearnNewWord(long vocabularyId) {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
     UserVocabulary userVocabulary = new UserVocabulary();
     userVocabulary.setId(new UserVocabularyId(userDetails.getId(), vocabularyId));
     long timeRepetition = Math.round(defaultTimeRepatition * defaultFE);
@@ -108,7 +107,6 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
      * + lấy toàn bộ các từ vựng được có end date sau hiện tại hoặc toàn bộ các tự vựng có thời gian
      * nhỏ nhất + 2 giờ
      */
-
     /** Lấy các ngày nhỏ nhất trong database */
     Date nearestDate = userVocabularyRepository.getNearestDate(userDetails.getId());
     /*
@@ -123,21 +121,15 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
           userVocabularyRepository.getVocabularyBeforeCurrent(
               userDetails.getId(), new Date(nearestDate.getTime() + 60 * 60 * 1000));
     }
-
     List<Map<String, Object>> objectWords = new LinkedList<>();
-
     for (UserVocabulary userVocabulary : userVocabularyList) {
-
       Map<String, Object> word = new LinkedHashMap<>();
       word.put("id", userVocabulary.getId());
       word.put("word", userVocabulary.getVocabulary());
       word.put("endDate",userVocabulary.getEndDate());
       List<Object> learningTypes = new LinkedList<>();
-
       Map<String, Object> map = new LinkedHashMap<>();
-
       int randomTypeQuestion = (int) Math.floor(Math.random() * 2);
-
       if (randomTypeQuestion == 0) {
         /** Nghe phát âm từ và điền lại từ cho đúng */
         Map<String, Object> listenMap = new LinkedHashMap<>();
@@ -151,7 +143,6 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
         meanMap.put("type", "mean");
         learningTypes.add(meanMap);
       }
-
       /** Random các loại bài tập. Chỉ lấy 1 loại bài tập của mỗi từ */
       List<Question> questionList = userVocabulary.getVocabulary().getQuestion();
       int sizeList = questionList.size();
@@ -170,10 +161,8 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
         learningTypes.add(map);
       }
       word.put("learningTypes", learningTypes);
-
       objectWords.add(word);
     }
-
     return objectWords;
   }
 }

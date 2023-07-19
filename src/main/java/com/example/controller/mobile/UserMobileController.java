@@ -2,17 +2,11 @@ package com.example.controller.mobile;
 
 import com.example.dto.mobile.UserResponseMobile;
 import com.example.payload.request.LoginRequest;
-import com.example.payload.request.SignupRequest;
-import com.example.payload.response.MessageResponse;
-import com.example.payload.response.UserInfoResponse;
 import com.example.security.jwt.JwtUtils;
 import com.example.security.services.UserDetailsImpl;
+import com.example.service.AuthService;
 import com.example.service.UserService;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,27 +26,29 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/mobile/user")
 public class UserMobileController {
 
+    private final AuthService authService;
     private final UserService userService;
 
     private final AuthenticationManager authenticationManager;
 
     private final JwtUtils jwtUtils;
 
-    public UserMobileController(UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public UserMobileController(AuthService authService, UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+        this.authService = authService;
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> loginUser (@RequestBody SignupRequest signupRequest){
-        ResponseEntity<MessageResponse> BAD_REQUEST = userService.checkValidSignupRequest(signupRequest);
-        if (BAD_REQUEST != null) return BAD_REQUEST;
-
-        userService.signUpUser(signupRequest);
-        return ResponseEntity.ok(
-                new MessageResponse(HttpServletResponse.SC_CREATED, "User registered successfully"));
-    }
+//    @PostMapping("/signup")
+//    public ResponseEntity<?> loginUser (@RequestBody UserSignUpRequest userSignupRequest){
+//        ResponseEntity<MessageResponse> BAD_REQUEST = AuthService.isValidSignUpRequest(userSignupRequest);
+//        if (BAD_REQUEST != null) return BAD_REQUEST;
+//
+//        authService.signUpUser(userSignupRequest);
+//        return ResponseEntity.ok(
+//                new MessageResponse(HttpServletResponse.SC_CREATED, "User registered successfully"));
+//    }
 
 
 
@@ -81,12 +77,11 @@ public class UserMobileController {
            userResponseMobile);
     }
 
-    @Transactional
     @GetMapping("/getInfo")
     public ResponseEntity<?> getInfo(){
         UserDetailsImpl userDetails =
                 (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       return ResponseEntity.ok(userService.getInfoById(userDetails.getId()));
+       return ResponseEntity.ok(userService.getUserById(userDetails.getId()));
     }
 
 

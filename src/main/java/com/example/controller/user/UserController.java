@@ -1,12 +1,9 @@
 package com.example.controller.user;
 
-import com.example.dto.user.LearnedVocabularyRequest;
-import com.example.dto.user.UserCourseResponse;
-import com.example.dto.user.UserTopicRes;
-import com.example.dto.user.UserVocabularyRequest;
+import com.example.dto.user.*;
 import com.example.service.*;
 import java.util.List;
-import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -51,9 +48,9 @@ public class UserController {
     return new ResponseEntity<>(userService.findTopicByCourseId(courseId), HttpStatus.OK);
   }
 
-  @GetMapping("/learn/{id}")
-  public List<Map<String, Object>> listVocabulary(@PathVariable("id") int topicId) {
-    return vocabularyService.getLearnVocabulary(topicId);
+  @GetMapping("/vocabularies/{id}")
+  public ResponseEntity<List<UserLearnRes>> listVocabulary(@PathVariable("id") int topicId) {
+    return new ResponseEntity<>(userService.getVocabulariesByTopicId(topicId), HttpStatus.OK);
   }
 
   @PostMapping("/saveNewWord")

@@ -9,6 +9,7 @@ import com.example.utils.FileUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -82,5 +83,11 @@ public class CourseServiceImpl implements CourseService {
       throw new CustomerException(e, "Something went wrong");
     }
     return courseRepository.save(savedCourse);
+  }
+
+  @Override
+  public boolean deleteCourseById(int courseId) {
+       courseRepository.deleteById(courseId);
+      return  !courseRepository.existsById(courseId);
   }
 }

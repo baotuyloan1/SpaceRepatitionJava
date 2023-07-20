@@ -1,16 +1,11 @@
 package com.example.entity;
 
-import com.example.dto.user.UserDto;
-import com.example.enums.RoleUser;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.*;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import lombok.*;
 
 /**
  * @author BAO 7/3/2023

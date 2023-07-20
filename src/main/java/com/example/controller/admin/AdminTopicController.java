@@ -31,13 +31,12 @@ public class AdminTopicController {
     return new ResponseEntity<>(topic1, HttpStatus.CREATED);
   }
 
-  @GetMapping("/getByCourseId/{id}")
+  @GetMapping("/courseId/{id}")
   public ResponseEntity<List<Topic>> getByIdCourse(@PathVariable("id") int courseId) {
       return new ResponseEntity<>(topicService.findByCourseId(courseId), HttpStatus.OK);
   }
 
 
-  @Transactional
   @GetMapping
   public ResponseEntity<List<TopicResponse>> getAll(){
     return new ResponseEntity<>(topicService.listAll(),HttpStatus.OK);

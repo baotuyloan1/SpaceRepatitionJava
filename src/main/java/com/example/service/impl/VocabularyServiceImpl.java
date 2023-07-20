@@ -13,8 +13,6 @@ import com.example.utils.FileUtils;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -44,12 +42,12 @@ public class VocabularyServiceImpl implements VocabularyService {
   @Value("${dir.resource.imgWord}")
   private String dirImgWord;
 
-
-
   public VocabularyServiceImpl(
-          VocabularyRepository vocabularyRepository,
-          AnswerRepository answerRepository,
-          UserRepository userRepository, UserVocabularyRepository userVocabularyRepository, FileUtils filenameUtils) {
+      VocabularyRepository vocabularyRepository,
+      AnswerRepository answerRepository,
+      UserRepository userRepository,
+      UserVocabularyRepository userVocabularyRepository,
+      FileUtils filenameUtils) {
     this.vocabularyRepository = vocabularyRepository;
     this.answerRepository = answerRepository;
     this.userRepository = userRepository;
@@ -116,14 +114,15 @@ public class VocabularyServiceImpl implements VocabularyService {
 
   //  @Transactional
   @Override
-  public List<Map<String, Object>>  getLearnVocabulary(int topicId) {
+  public List<Map<String, Object>> getLearnVocabulary(int topicId) {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     /**
      * Tại sao không gọi chung multi join fetch trong 1 câu query ?. Sẽ bị lỗi Cartesian product.
      */
     List<Vocabulary> vocabularyList =
-        vocabularyRepository.findAllNotLearnedBy(userDetails.getId(), topicId);
+        vocabularyRepository.findVocabulariesNotLearnedByUserIdInTopicId(
+            userDetails.getId(), topicId);
 
     List<Map<String, Object>> objectWords = new LinkedList<>();
 
@@ -173,9 +172,12 @@ public class VocabularyServiceImpl implements VocabularyService {
   }
 
   @Override
-  public List<Vocabulary> getLearnedWordByTopicAndUserId(Topic topic, Long userId) {
-    return vocabularyRepository.findLearnedWordByTopicAndUserId(topic.getId(), userId);
+  public List<Vocabulary> findWordsNotLearnedByUserIdInTopicId(Long userId, int topicId) {
+    return vocabularyRepository.findVocabulariesNotLearnedByUserIdInTopicId(userId, topicId);
   }
 
-
+  @Override
+  public List<Vocabulary> getLearnedWordInTopicByUserId(Topic topic, Long userId) {
+    return vocabularyRepository.findLearnedWordByTopicAndUserId(topic.getId(), userId);
+  }
 }

@@ -4,6 +4,7 @@ import com.example.enums.RoleUser;
 import com.example.security.jwt.AuthEntryPointJwt;
 import com.example.security.jwt.AuthTokenFilter;
 import com.example.security.services.UserDetailsServiceImpl;
+import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,8 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 /**
  * @author BAO 7/12/2023
@@ -68,15 +67,21 @@ public class WebSecurityConfig {
   }
 
   /**
-   * Khi dùng permitAll() thì các Spring Security cho phép tất cả các yêu cầu đi qua mà không cần xác thức 1 cái gì hết. Bao gồm cả yêu cầu từ các origin khác và các request cùng origin
+   * Khi dùng permitAll() thì các Spring Security cho phép tất cả các yêu cầu đi qua mà không cần
+   * xác thức 1 cái gì hết. Bao gồm cả yêu cầu từ các origin khác và các request cùng origin
    *
-   * khi dùng post đi qua permitAll() nó cho phép cookie được gửi di vì nó không các xác thực 1 cái gì hết
+   * <p>khi dùng post đi qua permitAll() nó cho phép cookie được gửi di vì nó không các xác thực 1
+   * cái gì hết
    *
-   * còn khi áp dụng các bảo mật chi tiết, các giới hạn CORS sẽ được áp dụng và các yêu cầu khác origin sẽ bị từ chối nếu không cấu hình CORS cho phép.
+   * <p>còn khi áp dụng các bảo mật chi tiết, các giới hạn CORS sẽ được áp dụng và các yêu cầu khác
+   * origin sẽ bị từ chối nếu không cấu hình CORS cho phép.
    *
-   * Spring security tích hợp sẵn 1 bộ lọc CORS mặc định, chỉ hỗ  trợ same origin. Bộ lọc CORS này cho phép yêu cầu từ nguồn khác nhưng chỉ cho phương thức GET
+   * <p>Spring security tích hợp sẵn 1 bộ lọc CORS mặc định, chỉ hỗ trợ same origin. Bộ lọc CORS này
+   * cho phép yêu cầu từ nguồn khác nhưng chỉ cho phương thức GET
    *
-   * Điều này có nghĩa là mặc định, bộ loc CORS trong spring security của spring boot, chỉ cho phép yêu cầu GET từ các nguồn khác
+   * <p>Điều này có nghĩa là mặc định, bộ loc CORS trong spring security của spring boot, chỉ cho
+   * phép yêu cầu GET từ các nguồn khác
+   *
    * @param httpSecurity
    * @return
    * @throws Exception
@@ -85,7 +90,7 @@ public class WebSecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
         .csrf(AbstractHttpConfigurer::disable)
-            .cors(config -> config.configurationSource(corsConfigurationSource()))
+        .cors(config -> config.configurationSource(corsConfigurationSource()))
         .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -100,7 +105,7 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/mobile/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
                     .anyRequest()
-                    .hasAnyAuthority(RoleUser.ROLE_USER.name()));
+                    .permitAll());
     httpSecurity.authenticationProvider(authenticationProvider());
     httpSecurity.addFilterBefore(
         authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 /**
  * @author BAO 7/8/2023
  */
@@ -27,7 +29,6 @@ public class Answer {
     @ManyToOne
     @JoinColumn(name = "id_question")
     private Question question;
-
 
 
 }

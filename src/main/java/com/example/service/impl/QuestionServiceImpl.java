@@ -11,6 +11,7 @@ import com.example.service.QuestionService;
 import jakarta.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 /**
@@ -44,7 +45,7 @@ public class QuestionServiceImpl implements QuestionService {
     }
     List<Answer> savedAnswers = answerRepository.saveAll(answerList);
     question.setAnswer(savedAnswers.get(questionRequestDto.getIndexRightAnswer()));
-    question.setAnswerList(savedAnswers);
+    question.setAnswers(savedAnswers);
 
     return questionRepository.save(question);
   }
@@ -67,4 +68,6 @@ public class QuestionServiceImpl implements QuestionService {
   public Question findById(Long questionId) {
     return questionRepository.findById(questionId).orElseThrow(() ->  new CustomerException("Question not found"));
   }
+
+
 }

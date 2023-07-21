@@ -36,6 +36,6 @@ public class Course {
   private String img;
 
   @JsonIgnore
-  @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "course", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Topic> topic;
 }

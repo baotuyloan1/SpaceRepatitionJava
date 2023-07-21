@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.QuestionRequestDto;
+import com.example.dto.admin.AdminQuestionRes;
 import com.example.dto.user.UserAnswerReponse;
 import com.example.entity.Question;
 
@@ -13,7 +14,7 @@ import java.util.Set;
 
 
 public interface QuestionService {
-    Question save(QuestionRequestDto question);
+    AdminQuestionRes save(QuestionRequestDto question);
 
     List<Question> listQuestion();
 

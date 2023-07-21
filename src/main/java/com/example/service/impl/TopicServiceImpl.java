@@ -1,13 +1,12 @@
 package com.example.service.impl;
 
-import com.example.dto.TopicResponse;
+import com.example.dto.admin.AdminTopicRes;
 import com.example.entity.Topic;
 import com.example.exception.CustomerException;
+import com.example.mapper.TopicMapper;
 import com.example.repository.TopicRepository;
 import com.example.service.TopicService;
-import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,9 +16,11 @@ import org.springframework.stereotype.Service;
 public class TopicServiceImpl implements TopicService {
 
   private final TopicRepository topicRepository;
+  private final TopicMapper topicMapper;
 
-  public TopicServiceImpl(TopicRepository topicRepository) {
+  public TopicServiceImpl(TopicRepository topicRepository, TopicMapper topicMapper) {
     this.topicRepository = topicRepository;
+    this.topicMapper = topicMapper;
   }
 
   @Override
@@ -28,34 +29,20 @@ public class TopicServiceImpl implements TopicService {
   }
 
   @Override
-  public List<Topic> findByCourseId(int courseId) {
-    return topicRepository.findByCourseId(courseId);
+  public List<AdminTopicRes> findByCourseId(int courseId) {
+    List<Topic> topics = topicRepository.findByCourseId(courseId);
+    return topicMapper.topicsToAdminTopicsRes(topics);
   }
 
   @Override
-  public List<TopicResponse> listAll() {
+  public List<AdminTopicRes> listAll() {
     List<Topic> topicResponses = topicRepository.findAll();
-
-    return listTopicToResponse(topicResponses);
+    return topicMapper.topicsToAdminTopicsRes(topicResponses);
   }
 
   @Override
   public void deleteTopicById(int id) {
     topicRepository.deleteById(id);
     if (topicRepository.existsById(id)) throw new CustomerException("Something went wrong");
-  }
-
-  TopicResponse topicToResponse(Topic topic) {
-    TopicResponse topicResponse = new TopicResponse();
-    topicResponse.setCourse(topic.getCourse());
-    topicResponse.setTitleVn(topic.getTitleVn());
-    topicResponse.setTitleEn(topic.getTitleEn());
-    topicResponse.setId(topic.getId());
-    topicResponse.setVocabulary(topic.getVocabulary());
-    return topicResponse;
-  }
-
-  List<TopicResponse> listTopicToResponse(List<Topic> topicList) {
-    return topicList.stream().map(this::topicToResponse).collect(Collectors.toList());
   }
 }

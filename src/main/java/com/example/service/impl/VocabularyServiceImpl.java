@@ -1,11 +1,11 @@
 package com.example.service.impl;
 
+import com.example.dto.admin.AdminVocabularyRes;
 import com.example.entity.*;
 import com.example.exception.CustomerException;
 import com.example.exception.ResourceNotFoundException;
+import com.example.mapper.VocabularyMapper;
 import com.example.repository.AnswerRepository;
-import com.example.repository.UserRepository;
-import com.example.repository.UserVocabularyRepository;
 import com.example.repository.VocabularyRepository;
 import com.example.security.services.UserDetailsImpl;
 import com.example.service.VocabularyService;
@@ -24,13 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class VocabularyServiceImpl implements VocabularyService {
 
-  private final VocabularyRepository vocabularyRepository;
 
-  private final AnswerRepository answerRepository;
 
-  private final UserRepository userRepository;
-
-  private final UserVocabularyRepository userVocabularyRepository;
   private final FileUtils filenameUtils;
 
   @Value("${dir.resource.audioWord}")
@@ -42,17 +37,18 @@ public class VocabularyServiceImpl implements VocabularyService {
   @Value("${dir.resource.imgWord}")
   private String dirImgWord;
 
+  private final VocabularyRepository vocabularyRepository;
+
+  private final AnswerRepository answerRepository;
+  private final VocabularyMapper vocabularyMapper;
   public VocabularyServiceImpl(
-      VocabularyRepository vocabularyRepository,
-      AnswerRepository answerRepository,
-      UserRepository userRepository,
-      UserVocabularyRepository userVocabularyRepository,
-      FileUtils filenameUtils) {
+          VocabularyRepository vocabularyRepository,
+          AnswerRepository answerRepository,
+          FileUtils filenameUtils, VocabularyMapper vocabularyMapper) {
     this.vocabularyRepository = vocabularyRepository;
     this.answerRepository = answerRepository;
-    this.userRepository = userRepository;
-    this.userVocabularyRepository = userVocabularyRepository;
     this.filenameUtils = filenameUtils;
+    this.vocabularyMapper = vocabularyMapper;
   }
 
   @Transactional
@@ -104,12 +100,9 @@ public class VocabularyServiceImpl implements VocabularyService {
 
   @Transactional
   @Override
-  public List<Vocabulary> getAllVocabulary() {
-    List<Vocabulary> vocabularyList = vocabularyRepository.findAll();
-    for (Vocabulary vocabulary : vocabularyList) {
-      vocabulary.setQuestion(null);
-    }
-    return vocabularyList;
+  public List<AdminVocabularyRes> getAllVocabulary() {
+    List<Vocabulary> vocabularies = vocabularyRepository.findAll();
+    return vocabularyMapper.vocabulariesToAdminVocabulariesRes(vocabularies);
   }
 
   //  @Transactional

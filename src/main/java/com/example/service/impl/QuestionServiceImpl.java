@@ -1,17 +1,18 @@
 package com.example.service.impl;
 
 import com.example.dto.QuestionRequestDto;
+import com.example.dto.admin.AdminQuestionRes;
 import com.example.entity.Answer;
 import com.example.entity.Question;
 import com.example.entity.Vocabulary;
 import com.example.exception.CustomerException;
+import com.example.mapper.QuestionMapper;
 import com.example.repository.AnswerRepository;
 import com.example.repository.QuestionRepository;
 import com.example.service.QuestionService;
 import jakarta.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,15 +25,20 @@ public class QuestionServiceImpl implements QuestionService {
 
   private final AnswerRepository answerRepository;
 
+  private final QuestionMapper questionMapper;
+
   public QuestionServiceImpl(
-      QuestionRepository questionRepository, AnswerRepository answerRepository) {
+      QuestionRepository questionRepository,
+      AnswerRepository answerRepository,
+      QuestionMapper questionMapper) {
     this.questionRepository = questionRepository;
     this.answerRepository = answerRepository;
+    this.questionMapper = questionMapper;
   }
 
   @Transactional
   @Override
-  public Question save(QuestionRequestDto questionRequestDto) {
+  public AdminQuestionRes save(QuestionRequestDto questionRequestDto) {
     Question question = new Question();
     question.setQuestion(questionRequestDto.getQuestion());
     Vocabulary vocabulary = new Vocabulary();
@@ -46,8 +52,8 @@ public class QuestionServiceImpl implements QuestionService {
     List<Answer> savedAnswers = answerRepository.saveAll(answerList);
     question.setAnswer(savedAnswers.get(questionRequestDto.getIndexRightAnswer()));
     question.setAnswers(savedAnswers);
-
-    return questionRepository.save(question);
+    Question savedQuestionNew = questionRepository.save(question);
+    return questionMapper.questionToAdminQuestionRes(savedQuestionNew);
   }
 
   @Override
@@ -58,16 +64,15 @@ public class QuestionServiceImpl implements QuestionService {
   @Override
   public void deleteQuestion(Long questionId) {
     questionRepository.deleteById(questionId);
-    if (questionRepository.existsById(questionId)){
-      throw  new CustomerException("Delete Question fail, some thing went wrong");
+    if (questionRepository.existsById(questionId)) {
+      throw new CustomerException("Delete Question fail, some thing went wrong");
     }
-
   }
 
   @Override
   public Question findById(Long questionId) {
-    return questionRepository.findById(questionId).orElseThrow(() ->  new CustomerException("Question not found"));
+    return questionRepository
+        .findById(questionId)
+        .orElseThrow(() -> new CustomerException("Question not found"));
   }
-
-
 }

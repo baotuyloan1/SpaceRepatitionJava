@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.admin.AdminCourseRes;
 import com.example.entity.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,9 +14,9 @@ public interface CourseService {
 
     Page<Course> pageCourses(int pageSize, int currentPage, String sortDir, String sortField);
 
-    List<Course> listCourse();
+    List<AdminCourseRes> listCourse();
 
-    Course save(Course course, MultipartFile img);
+    AdminCourseRes save(Course course, MultipartFile img);
 
     boolean deleteCourseById(int courseId);
 }

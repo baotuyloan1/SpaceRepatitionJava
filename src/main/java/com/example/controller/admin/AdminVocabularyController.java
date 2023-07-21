@@ -1,7 +1,7 @@
 package com.example.controller.admin;
 
 import com.example.dto.DefaultFormatValidate;
-import com.example.dto.admin.VocabularyAdminResponse;
+import com.example.dto.admin.AdminVocabularyRes;
 import com.example.entity.Vocabulary;
 import com.example.service.FileService;
 import com.example.service.VocabularyService;
@@ -24,8 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
  * @author BAO 6/29/2023
  */
 @RestController
-@RequestMapping("/api/vocabularies")
-public class VocabularyController {
+@RequestMapping("/api/admin/vocabularies")
+public class AdminVocabularyController {
 
   @Value("${dir.resource.audioWord}")
   private String pathAudioWord;
@@ -41,7 +41,7 @@ public class VocabularyController {
 
   private final String DEFAULT_MESSAGE_FILE_NULL = "must not be null";
 
-  public VocabularyController(VocabularyService vocabularyService, FileService fileService) {
+  public AdminVocabularyController(VocabularyService vocabularyService, FileService fileService) {
     this.vocabularyService = vocabularyService;
     this.fileService = fileService;
   }
@@ -73,7 +73,7 @@ public class VocabularyController {
   }
 
   @GetMapping({"/", ""})
-  public ResponseEntity<List<Vocabulary>> getAllVocabulary() {
+  public ResponseEntity<List<AdminVocabularyRes>> getAllVocabulary() {
     return new ResponseEntity<>(vocabularyService.getAllVocabulary(), HttpStatus.OK);
   }
 

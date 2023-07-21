@@ -1,12 +1,12 @@
 package com.example.mapper.impl;
 
+import com.example.dto.admin.AdminCourseRes;
 import com.example.dto.user.UserCourseResponse;
 import com.example.entity.Course;
 import com.example.mapper.CourseMapper;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Component;
 
 /**
  * @author BAO 7/19/2023
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Component
 public class CourseMapperImpl implements CourseMapper {
   @Override
-  public UserCourseResponse courseToCourseUserResponse(Course course) {
+  public UserCourseResponse courseToUserCourseResponse(Course course) {
     UserCourseResponse userCourseResponse = new UserCourseResponse();
     userCourseResponse.setId(course.getId());
     userCourseResponse.setDescription(course.getDescription());
@@ -25,7 +25,23 @@ public class CourseMapperImpl implements CourseMapper {
   }
 
   @Override
-  public List<UserCourseResponse> coursesToCoursesUserResponse(List<Course> listCourses) {
-    return listCourses.stream().map(this::courseToCourseUserResponse).collect(Collectors.toList());
+  public List<UserCourseResponse> coursesToUserCoursesResponse(List<Course> listCourses) {
+    return listCourses.stream().map(this::courseToUserCourseResponse).toList();
+  }
+
+  @Override
+  public AdminCourseRes courseToAdminCourseRes(Course course) {
+    AdminCourseRes adminCourseRes = new AdminCourseRes();
+    adminCourseRes.setId(course.getId());
+    adminCourseRes.setDescription(course.getDescription());
+    adminCourseRes.setTitle(course.getDescription());
+    adminCourseRes.setTarget(course.getTarget());
+    adminCourseRes.setImg(course.getImg());
+    return adminCourseRes;
+  }
+
+  @Override
+  public List<AdminCourseRes> coursesToAdminCoursesRes(List<Course> courseList) {
+    return courseList.stream().map(this::courseToAdminCourseRes).collect(Collectors.toList());
   }
 }

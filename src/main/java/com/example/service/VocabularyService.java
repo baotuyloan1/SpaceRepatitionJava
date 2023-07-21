@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.admin.AdminVocabularyRes;
 import com.example.entity.Topic;
 import com.example.entity.Vocabulary;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +21,7 @@ public interface VocabularyService {
 
     void deleteAudio(Long id);
 
-    List<Vocabulary> getAllVocabulary();
+    List<AdminVocabularyRes> getAllVocabulary();
 
 
     List<Map<String, Object>> getLearnVocabulary(int topicId);

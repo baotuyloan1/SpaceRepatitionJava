@@ -1,6 +1,7 @@
 package com.example.controller.admin;
 
 import com.example.dto.QuestionRequestDto;
+import com.example.dto.admin.AdminQuestionRes;
 import com.example.entity.Question;
 import com.example.service.QuestionService;
 import java.util.List;
@@ -22,10 +23,9 @@ public class AdminQuestionController {
   }
 
   @PostMapping({"/", ""})
-  public ResponseEntity<Question> saveQuestion(@RequestBody QuestionRequestDto questionRequestDto) {
-    Question question1 = questionService.save(questionRequestDto);
-
-    return new ResponseEntity<>(question1, HttpStatus.CREATED);
+  public ResponseEntity<AdminQuestionRes> saveQuestion(
+      @RequestBody QuestionRequestDto questionRequestDto) {
+    return new ResponseEntity<>(questionService.save(questionRequestDto), HttpStatus.CREATED);
   }
 
   @GetMapping({"/", ""})

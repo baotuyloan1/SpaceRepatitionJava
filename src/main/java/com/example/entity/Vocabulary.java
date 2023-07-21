@@ -34,7 +34,7 @@ public class Vocabulary {
 
   @NotBlank
   @Column(name = "IPA")
-  private String IPA;
+  private String ipa;
 
   @NotBlank
   @Column(name = "meaning_word", columnDefinition = "NVARCHAR")

@@ -12,4 +12,6 @@ import java.util.Set;
 public interface AnswerMapper {
     UserAnswerReponse answerToUserAnswerRes(Answer answer);
     Set<UserAnswerReponse> answersToUserAnswersRes(List<Answer> answers);
+
+
 }

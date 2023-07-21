@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.dto.admin;
 
 import com.example.entity.Course;
 import com.example.entity.Vocabulary;
@@ -17,20 +17,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TopicResponse {
-
+public class AdminTopicRes {
     private int id;
-
     private String titleEn;
-
     private String titleVn;
-
-
     private Course course;
-
-
-    @JsonIgnoreProperties({"question", "topic"})
-    private List<Vocabulary> vocabulary;
+    private int numberWords;
 
 
 

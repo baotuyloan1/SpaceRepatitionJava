@@ -5,12 +5,10 @@ import com.example.entity.*;
 import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.AnswerMapper;
 import com.example.mapper.CourseMapper;
-import com.example.mapper.TopicMapper;
 import com.example.mapper.VocabularyMapper;
 import com.example.repository.CourseRepository;
 import com.example.repository.UserRepository;
 import com.example.security.services.UserDetailsImpl;
-import com.example.service.QuestionService;
 import com.example.service.TopicService;
 import com.example.service.UserService;
 import com.example.service.VocabularyService;
@@ -27,30 +25,24 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final TopicService topicService;
-  private final TopicMapper topicMapper;
   private final CourseRepository courseRepository;
   private final CourseMapper courseMapper;
   private final VocabularyService vocabularyService;
-  private final QuestionService questionService;
   private final AnswerMapper answerMapper;
   private final VocabularyMapper vocabularyMapper;
 
   public UserServiceImpl(
           UserRepository userRepository,
           TopicService topicService,
-          TopicMapper topicMapper,
           CourseRepository courseRepository,
           CourseMapper courseMapper,
           VocabularyService vocabularyService,
-          QuestionService questionService,
           AnswerMapper answerMapper, VocabularyMapper vocabularyMapper) {
     this.userRepository = userRepository;
     this.topicService = topicService;
-    this.topicMapper = topicMapper;
     this.courseRepository = courseRepository;
     this.courseMapper = courseMapper;
     this.vocabularyService = vocabularyService;
-    this.questionService = questionService;
     this.answerMapper = answerMapper;
     this.vocabularyMapper = vocabularyMapper;
   }
@@ -70,7 +62,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public List<UserCourseResponse> getListCourses() {
     List<Course> courseList = courseRepository.findAll();
-    return courseMapper.coursesToCoursesUserResponse(courseList);
+    return courseMapper.coursesToUserCoursesResponse(courseList);
   }
 
   @Transactional
@@ -110,16 +102,17 @@ public class UserServiceImpl implements UserService {
 
   public void initLearningTypes(Set<TypeLearnRes> typeLearnResList, Vocabulary vocabulary) {
     typeLearnResList.add(new TypeLearnRes("info"));
-    addselectTypeToRes(typeLearnResList, vocabulary);
+    addSelectTypeToRes(typeLearnResList, vocabulary);
     typeLearnResList.add(new TypeLearnRes("mean"));
     typeLearnResList.add(new TypeLearnRes("listen"));
   }
 
 
 
-  public void addselectTypeToRes(Set<TypeLearnRes> typeLearnResList, Vocabulary vocabulary) {
+  public void addSelectTypeToRes(Set<TypeLearnRes> typeLearnResList, Vocabulary vocabulary) {
     List<Question> questionList = vocabulary.getQuestion();
     if (!questionList.isEmpty()) {
+
       int indexQuestion = (int) Math.floor(Math.random() * questionList.size());
       Question question = questionList.get(indexQuestion);
       TypeQuestionRes typeQuestionRes = new TypeQuestionRes();

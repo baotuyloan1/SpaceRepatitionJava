@@ -1,11 +1,10 @@
 package com.example.controller.admin;
 
-import com.example.dto.TopicResponse;
+import com.example.dto.admin.AdminTopicRes;
 import com.example.entity.Topic;
 import com.example.service.TopicService;
 import java.util.List;
 
-import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,13 +31,13 @@ public class AdminTopicController {
   }
 
   @GetMapping("/courseId/{id}")
-  public ResponseEntity<List<Topic>> getByIdCourse(@PathVariable("id") int courseId) {
+  public ResponseEntity<List<AdminTopicRes>> getByIdCourse(@PathVariable("id") int courseId) {
       return new ResponseEntity<>(topicService.findByCourseId(courseId), HttpStatus.OK);
   }
 
 
   @GetMapping
-  public ResponseEntity<List<TopicResponse>> getAll(){
+  public ResponseEntity<List<AdminTopicRes>> getAll(){
     return new ResponseEntity<>(topicService.listAll(),HttpStatus.OK);
   }
 

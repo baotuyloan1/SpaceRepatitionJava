@@ -1,4 +1,4 @@
-package com.example.controllerAdvice;
+package com.example.advice;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

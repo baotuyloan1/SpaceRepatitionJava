@@ -6,17 +6,15 @@ import com.example.dto.admin.AdminVocabularyRes;
 import com.example.entity.Vocabulary;
 import com.example.service.FileService;
 import com.example.service.VocabularyService;
+import com.example.utils.FileUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import java.io.IOException;
-import java.io.InputStream;
+
 import java.util.*;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -27,18 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/admin/vocabularies")
+@RequestMapping("/api/v1/vocabularies")
 public class AdminVocabularyController {
 
-
-
   private final VocabularyService vocabularyService;
-  private final FileService fileService;
-  private final PropertiesConfig envDev;
+  private final FileUtils fileUtils;
 
   private final String DEFAULT_MESSAGE_FILE_NULL = "must not be null";
-
-
 
   @PostMapping({"/", ""})
   public ResponseEntity<?> saveWord(
@@ -78,7 +71,6 @@ public class AdminVocabularyController {
 
   //      @GetMapping(value = "/playAudio/{id}", produces = MediaType.ALL_VALUE)
 
-
   // Api for uploading audio after posting titles and other audio
   //    @PostMapping("/post/{id}")
   //    public WordEntity uploadingAudio(@RequestParam("audio") MultipartFile audio, @PathVariable
@@ -94,26 +86,9 @@ public class AdminVocabularyController {
       @RequestBody Vocabulary vocabulary, @RequestParam("audio") MultipartFile audio) {
     vocabularyService.update(vocabulary, audio);
   }
+
   @GetMapping(value = "/playAudio/{fileName}")
   public void playAudio(@PathVariable String fileName, HttpServletResponse response) {
-
-    String type = fileName.substring((fileName.indexOf("_") + 1), fileName.indexOf("."));
-    String path = null;
-    if (type.equals("word")) {
-      path = envDev.getPathAudioWord();
-    } else if (type.equals("sentence")) {
-      path = envDev.getPathAudioSentence();
-    }
-    InputStream resource = null;
-    try {
-      resource = fileService.getAudioFile(path, fileName);
-      response.setContentType(MediaType.ALL_VALUE);
-      StreamUtils.copy(resource, response.getOutputStream());
-    } catch (IOException ex) {
-      throw new RuntimeException("Something went wrong", ex);
-    }
+    fileUtils.playAudio(fileName, response);
   }
-
-
-
 }

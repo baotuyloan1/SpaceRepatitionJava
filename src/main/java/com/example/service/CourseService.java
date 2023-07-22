@@ -18,5 +18,5 @@ public interface CourseService {
 
     Course save(Course course, MultipartFile img);
 
-    boolean deleteCourseById(int courseId);
+    void deleteCourseById(int courseId);
 }

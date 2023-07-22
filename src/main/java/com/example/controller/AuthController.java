@@ -48,7 +48,7 @@ public class AuthController {
     boolean isExistsUserName = authService.isExistUserName(signUpRequest.getUsername());
     boolean isExistsEmail = authService.isExistEmail(signUpRequest.getEmail());
     if (isExistsEmail && isExistsUserName) {
-      return badRequest("Username and is email is exist");
+      return badRequest("Username and email are exist");
     } else {
       if (isExistsEmail) {
         return badRequest("Email is exist");

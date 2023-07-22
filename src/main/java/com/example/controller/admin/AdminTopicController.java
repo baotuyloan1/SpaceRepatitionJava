@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/admin/topics")
+@RequestMapping("/api/v1/topics")
 public class AdminTopicController {
 
   private final TopicService topicService;
@@ -39,7 +39,7 @@ public class AdminTopicController {
 
 
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("{id}")
   public ResponseEntity<Void>deleteTopicById (@PathVariable("id") int id){
     topicService.deleteTopicById(id);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);

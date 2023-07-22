@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/admin/questions")
+@RequestMapping("/api/v1/questions")
 public class AdminQuestionController {
 
   private final QuestionService questionService;
@@ -33,13 +33,13 @@ public class AdminQuestionController {
     return new ResponseEntity<>(questionService.listQuestion(), HttpStatus.OK);
   }
 
-  @DeleteMapping({"/{id}"})
+  @DeleteMapping({"{id}"})
   public ResponseEntity<Void> deleteQuestion(@PathVariable("id") Long questionId) {
     questionService.deleteQuestion(questionId);
-    return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>( HttpStatus.NO_CONTENT);
   }
 
-  @GetMapping({"/{id}"})
+  @GetMapping({"{id}"})
   public ResponseEntity<Question> getQuestionById(@PathVariable("id") Long questionId) {
     return new ResponseEntity<>(questionService.findById(questionId), HttpStatus.OK);
   }

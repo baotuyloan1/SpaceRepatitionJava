@@ -70,8 +70,7 @@ public class CourseServiceImpl implements CourseService {
   }
 
   @Override
-  public boolean deleteCourseById(int courseId) {
+  public void deleteCourseById(int courseId) {
     courseRepository.deleteById(courseId);
-    return !courseRepository.existsById(courseId);
   }
 }

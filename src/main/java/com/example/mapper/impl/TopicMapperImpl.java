@@ -22,7 +22,7 @@ public class TopicMapperImpl implements TopicMapper {
   }
 
   @Override
-  public List<UserTopicRes> topicsToTopicsUserResponse(List<Topic> topics) {
+  public List<UserTopicRes> topicsToTopicsUserRes(List<Topic> topics) {
     return topics.stream().map(this::topicToUserTopicRes).toList();
   }
 

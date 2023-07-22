@@ -5,6 +5,7 @@ import com.example.entity.*;
 import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.AnswerMapper;
 import com.example.mapper.CourseMapper;
+import com.example.mapper.TopicMapper;
 import com.example.mapper.VocabularyMapper;
 import com.example.repository.CourseRepository;
 import com.example.repository.UserRepository;
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
   private final VocabularyService vocabularyService;
   private final AnswerMapper answerMapper;
   private final VocabularyMapper vocabularyMapper;
+  private final TopicMapper topicMapper;
 
   public UserServiceImpl(
           UserRepository userRepository,
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
           CourseRepository courseRepository,
           CourseMapper courseMapper,
           VocabularyService vocabularyService,
-          AnswerMapper answerMapper, VocabularyMapper vocabularyMapper) {
+          AnswerMapper answerMapper, VocabularyMapper vocabularyMapper, TopicMapper topicMapper) {
     this.userRepository = userRepository;
     this.topicService = topicService;
     this.courseRepository = courseRepository;
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
     this.vocabularyService = vocabularyService;
     this.answerMapper = answerMapper;
     this.vocabularyMapper = vocabularyMapper;
+    this.topicMapper = topicMapper;
   }
 
   @Override
@@ -68,13 +71,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public List<UserTopicRes> findTopicByCourseId(int courseId) {
-    List<Topic> topics = topicService.findByCourseId(courseId);
-    return topics.stream()
-        .map(
-            topic ->
-                new UserTopicRes(
-                    topic.getId(), topic.getTitleEn(), topic.getTitleVn(), isLearnedAll(topic)))
-        .collect(Collectors.toList());
+    return topicService.userFindByCourseId(courseId);
   }
 
   @Transactional

@@ -58,7 +58,7 @@ public class CourseServiceImpl implements CourseService {
   }
 
   @Override
-  public AdminCourseRes save(Course course, MultipartFile img) {
+  public Course save(Course course, MultipartFile img) {
     Course savedCourse = courseRepository.save(course);
     try {
       String fileName = fileUtils.saveFile(img, savedCourse.getId(), dirImgCourses, "category");
@@ -66,8 +66,7 @@ public class CourseServiceImpl implements CourseService {
     } catch (IOException e) {
       throw new CustomerException(e, "Something went wrong");
     }
-    Course savedCourseNew = courseRepository.save(savedCourse);
-    return courseMapper.courseToAdminCourseRes(savedCourseNew);
+    return courseRepository.save(savedCourse);
   }
 
   @Override

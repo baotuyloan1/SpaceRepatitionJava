@@ -16,7 +16,7 @@ public interface CourseService {
 
     List<AdminCourseRes> listCourse();
 
-    AdminCourseRes save(Course course, MultipartFile img);
+    Course save(Course course, MultipartFile img);
 
     boolean deleteCourseById(int courseId);
 }

@@ -1,12 +1,15 @@
 package com.example.service.impl;
 
 import com.example.dto.admin.AdminTopicRes;
+import com.example.dto.user.UserTopicRes;
 import com.example.entity.Topic;
 import com.example.exception.CustomerException;
 import com.example.mapper.TopicMapper;
 import com.example.repository.TopicRepository;
 import com.example.service.TopicService;
 import java.util.List;
+
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,8 +31,9 @@ public class TopicServiceImpl implements TopicService {
     return topicRepository.save(topic);
   }
 
+  @Transactional
   @Override
-  public List<AdminTopicRes> findByCourseId(int courseId) {
+  public List<AdminTopicRes> adminFindByCourseId(int courseId) {
     List<Topic> topics = topicRepository.findByCourseId(courseId);
     return topicMapper.topicsToAdminTopicsRes(topics);
   }
@@ -44,5 +48,11 @@ public class TopicServiceImpl implements TopicService {
   public void deleteTopicById(int id) {
     topicRepository.deleteById(id);
     if (topicRepository.existsById(id)) throw new CustomerException("Something went wrong");
+  }
+
+  @Override
+  public List<UserTopicRes> userFindByCourseId(int courseId) {
+    List<Topic> topics = topicRepository.findByCourseId(courseId);
+    return topicMapper.topicsToTopicsUserRes(topics);
   }
 }

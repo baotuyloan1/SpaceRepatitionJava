@@ -2,6 +2,7 @@ package com.example.controller.admin;
 
 import com.example.entity.User;
 import com.example.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +15,11 @@ import java.util.List;
  * @author BAO 7/13/2023
  */
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/admin/users")
 public class AdminUserController {
     private final UserService userService;
 
-    public AdminUserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping({"", "/"})
     public ResponseEntity<List<User>> getAll() {

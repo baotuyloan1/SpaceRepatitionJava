@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.admin.AdminTopicRes;
+import com.example.dto.user.UserTopicRes;
 import com.example.entity.Topic;
 
 import java.util.List;
@@ -11,9 +12,11 @@ import java.util.List;
 public interface TopicService {
     Topic save(Topic topic);
 
-    List<AdminTopicRes> findByCourseId(int courseId);
+    List<AdminTopicRes> adminFindByCourseId(int courseId);
 
     List<AdminTopicRes> listAll();
 
     void deleteTopicById(int id);
+
+    List<UserTopicRes> userFindByCourseId(int courseId);
 }

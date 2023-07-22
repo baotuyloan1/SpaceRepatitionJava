@@ -1,6 +1,5 @@
 package com.example.mapper;
 
-import com.example.dto.admin.AdminAnswerRes;
 import com.example.dto.admin.AdminTopicRes;
 import com.example.dto.user.UserTopicRes;
 import com.example.entity.Topic;
@@ -13,7 +12,7 @@ import java.util.List;
 public interface TopicMapper {
 
     UserTopicRes topicToUserTopicRes(Topic topic);
-    List<UserTopicRes> topicsToTopicsUserResponse(List<Topic> topics);
+    List<UserTopicRes> topicsToTopicsUserRes(List<Topic> topics);
 
     AdminTopicRes topicToAdminTopicRes(Topic topic);
 

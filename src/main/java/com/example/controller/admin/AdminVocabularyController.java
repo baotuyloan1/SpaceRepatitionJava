@@ -1,5 +1,6 @@
 package com.example.controller.admin;
 
+import com.example.config.PropertiesConfig;
 import com.example.dto.DefaultFormatValidate;
 import com.example.dto.admin.AdminVocabularyRes;
 import com.example.entity.Vocabulary;
@@ -10,7 +11,8 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import org.springframework.beans.factory.annotation.Value;
+
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,27 +26,19 @@ import org.springframework.web.multipart.MultipartFile;
  * @author BAO 6/29/2023
  */
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/admin/vocabularies")
 public class AdminVocabularyController {
 
-  @Value("${dir.resource.audioWord}")
-  private String pathAudioWord;
 
-  @Value("${dir.resource.audioSentence}")
-  private String pathAudioSentence;
-
-  @Value("${dir.resource.imgWord}")
-  private String pathImg;
 
   private final VocabularyService vocabularyService;
   private final FileService fileService;
+  private final PropertiesConfig envDev;
 
   private final String DEFAULT_MESSAGE_FILE_NULL = "must not be null";
 
-  public AdminVocabularyController(VocabularyService vocabularyService, FileService fileService) {
-    this.vocabularyService = vocabularyService;
-    this.fileService = fileService;
-  }
+
 
   @PostMapping({"/", ""})
   public ResponseEntity<?> saveWord(
@@ -106,9 +100,9 @@ public class AdminVocabularyController {
     String type = fileName.substring((fileName.indexOf("_") + 1), fileName.indexOf("."));
     String path = null;
     if (type.equals("word")) {
-      path = pathAudioWord;
+      path = envDev.getPathAudioWord();
     } else if (type.equals("sentence")) {
-      path = pathAudioSentence;
+      path = envDev.getPathAudioSentence();
     }
     InputStream resource = null;
     try {

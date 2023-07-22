@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/admin/courses")
+@RequestMapping("/api/admin/courses/ahihi")
 public class AdminCourseController {
 
   private final CourseService courseService;

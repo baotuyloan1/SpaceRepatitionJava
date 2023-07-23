@@ -7,13 +7,19 @@ import com.example.entity.Answer;
 import com.example.entity.Question;
 import com.example.mapper.QuestionMapper;
 import java.util.List;
+
+import com.example.mapper.VocabularyMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
  * @author BAO 7/20/2023
  */
 @Component
+@AllArgsConstructor
 public class QuestionMapperImpl implements QuestionMapper {
+
+  private final VocabularyMapper vocabularyMapper;
 
   @Override
   public UserQuestionResponse questionToUserQuestionRes(Question question) {
@@ -26,7 +32,8 @@ public class QuestionMapperImpl implements QuestionMapper {
     AdminQuestionRes questionRes = new AdminQuestionRes();
     questionRes.setQuestion(question.getQuestion());
     questionRes.setId(question.getId());
-    //    questionRes.setVocabulary(question.getVocabulary());
+    questionRes.setVocabulary(
+        vocabularyMapper.vocabularyToAdminVocabularyResponse(question.getVocabulary()));
     questionRes.setRightAnswer(answerToAdminAnswerRes(question.getAnswer()));
     questionRes.setAnswers(answersToAdminAnswersRes(question.getAnswers()));
     return questionRes;

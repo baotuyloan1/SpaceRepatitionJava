@@ -53,7 +53,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
   @Transactional
   @Override
-  public AdminVocabularyRes createWord(
+  public Long createWord(
       Vocabulary vocabulary,
       MultipartFile audioWord,
       MultipartFile audioSentence,
@@ -76,7 +76,7 @@ public class VocabularyServiceImpl implements VocabularyService {
       String imageFileName = filenameUtils.saveFile(img, savedWord.getId(), dirImgWord, "word");
       savedWord.setImg(imageFileName);
       savedWord = vocabularyRepository.save(savedWord);
-      return vocabularyMapper.vocabularyToAdminVocabularyResponse(savedWord);
+      return savedWord.getId();
     } catch (IOException e) {
       throw new ApiRequestException(e, "Something went wrong");
     }

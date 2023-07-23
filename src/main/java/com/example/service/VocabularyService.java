@@ -13,7 +13,7 @@ import java.util.Map;
  * 6/29/2023
  */
 public interface VocabularyService {
-    AdminVocabularyRes createWord(Vocabulary vocabulary, MultipartFile audioWord, MultipartFile audioSentence, MultipartFile img);
+    Long createWord(Vocabulary vocabulary, MultipartFile audioWord, MultipartFile audioSentence, MultipartFile img);
 
     Vocabulary getById(Long id);
 

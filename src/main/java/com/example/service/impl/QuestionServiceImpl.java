@@ -56,6 +56,7 @@ public class QuestionServiceImpl implements QuestionService {
     return questionMapper.questionToAdminQuestionRes(savedQuestionNew);
   }
 
+  @Transactional
   @Override
   public List<AdminQuestionRes> listQuestion() {
     List<Question> questions = questionRepository.findAll();

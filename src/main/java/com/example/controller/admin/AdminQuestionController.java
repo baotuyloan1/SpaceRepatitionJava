@@ -21,7 +21,6 @@ public class AdminQuestionController {
 
   private final QuestionService questionService;
 
-
   @PostMapping
   public ResponseEntity<AdminQuestionRes> createQuestion(
       @RequestBody QuestionRequestDto questionRequestDto) {
@@ -29,18 +28,18 @@ public class AdminQuestionController {
   }
 
   @GetMapping
-  public ResponseEntity<List<Question>> getAllQuestions() {
+  public ResponseEntity<List<AdminQuestionRes>> getAllQuestions() {
     return new ResponseEntity<>(questionService.listQuestion(), HttpStatus.OK);
   }
 
-  @DeleteMapping({"{id}"})
+  @DeleteMapping("{id}")
   public ResponseEntity<Void> deleteQuestion(@PathVariable("id") Long questionId) {
     questionService.deleteQuestion(questionId);
-    return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  @GetMapping({"{id}"})
-  public ResponseEntity<Question> getQuestionById(@PathVariable("id") Long questionId) {
+  @GetMapping("{id}")
+  public ResponseEntity<AdminQuestionRes> getQuestionById(@PathVariable("id") Long questionId) {
     return new ResponseEntity<>(questionService.findById(questionId), HttpStatus.OK);
   }
 }

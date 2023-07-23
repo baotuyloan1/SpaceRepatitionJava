@@ -21,9 +21,9 @@ public class AdminTopicRes {
     private int id;
     private String titleEn;
     private String titleVn;
-    private Course course;
+    private AdminCourseRes course;
     private int numberWords;
-
+    private String img;
 
 
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class UserCourseResponse {
+public class UserCourseRes {
     private int id;
     private String title;
     private String target;

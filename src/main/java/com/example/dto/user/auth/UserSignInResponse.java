@@ -21,5 +21,4 @@ public class UserSignInResponse extends SignInResponse {
   private String email;
   private List<String> roles;
 
-
 }

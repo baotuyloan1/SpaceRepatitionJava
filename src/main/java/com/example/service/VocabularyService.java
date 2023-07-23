@@ -13,7 +13,7 @@ import java.util.Map;
  * 6/29/2023
  */
 public interface VocabularyService {
-    Vocabulary createWord(Vocabulary vocabulary, MultipartFile audioWord, MultipartFile audioSentence, MultipartFile img);
+    AdminVocabularyRes createWord(Vocabulary vocabulary, MultipartFile audioWord, MultipartFile audioSentence, MultipartFile img);
 
     Vocabulary getById(Long id);
 
@@ -22,6 +22,8 @@ public interface VocabularyService {
     void deleteAudio(Long id);
 
     List<AdminVocabularyRes> getAllVocabulary();
+
+    List<AdminVocabularyRes> getVocabulariesByTopicId(int id);
 
 
     List<Map<String, Object>> getLearnVocabulary(int topicId);

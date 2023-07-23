@@ -1,7 +1,10 @@
 package com.example.controller;
 
+import com.example.dto.user.auth.MobileSignInRes;
 import com.example.dto.user.auth.UserSignInResponse;
 import com.example.dto.user.auth.UserSignUpRequest;
+import com.example.dto.user.auth.UserSignUpResponse;
+import com.example.exception.ApiRequestException;
 import com.example.exception.ErrorResponse;
 import com.example.payload.request.LoginRequest;
 import com.example.payload.response.MessageResponse;
@@ -21,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @author BAO 7/15/2023
  */
 @RestController
-@RequestMapping("/api/auth/")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
   private final AuthService authService;
@@ -43,20 +46,21 @@ public class AuthController {
                 message));
   }
 
-  @PostMapping({"/signup"})
-  public ResponseEntity<?> singUpUser(@RequestBody UserSignUpRequest signUpRequest) {
+  @PostMapping("/sign-up")
+  public ResponseEntity<Long> signUpUser(@RequestBody UserSignUpRequest signUpRequest) {
     boolean isExistsUserName = authService.isExistUserName(signUpRequest.getUsername());
     boolean isExistsEmail = authService.isExistEmail(signUpRequest.getEmail());
     if (isExistsEmail && isExistsUserName) {
-      return badRequest("Username and email are exist");
-    } else {
-      if (isExistsEmail) {
-        return badRequest("Email is exist");
-      } else if (isExistsUserName) {
-        return badRequest("Username is exist");
-      }
+      throw new ApiRequestException("Email và UserName đã tồn tại trong hệ thống");
     }
-    return new ResponseEntity<>(authService.signUpUser(signUpRequest), HttpStatus.CREATED);
+    if (isExistsEmail) {
+      throw new ApiRequestException("Email đã tồn tại trong hệ thống");
+    }
+    if (isExistsUserName) {
+      throw new ApiRequestException("UserName đã tồn tại trong hệ thống");
+    }
+    UserSignUpResponse user = authService.signUpUser(signUpRequest);
+    return new ResponseEntity<>(user.getId(), HttpStatus.CREATED);
   }
 
   /**
@@ -73,7 +77,7 @@ public class AuthController {
    * @param loginRequest
    * @return
    */
-  @PostMapping("/signin")
+  @PostMapping("/sign-in")
   public ResponseEntity<UserSignInResponse> signInUser(@RequestBody LoginRequest loginRequest) {
     Authentication authentication =
         authenticationManager.authenticate(
@@ -86,9 +90,15 @@ public class AuthController {
     return ResponseEntity.ok().headers(headers).body(authService.getInfoUserSignIn(userDetails));
   }
 
-  @PostMapping("/signout")
-  public ResponseEntity<?> logoutUser() {
-    ResponseCookie cookie = authService.getClearnJwtCookie();
+  @PostMapping("/mobile/sign-in")
+  public ResponseEntity<MobileSignInRes> signInMobile(@RequestBody LoginRequest loginRequest) {
+    MobileSignInRes res = authService.mobileSignIn(loginRequest);
+    return new ResponseEntity<>(res, HttpStatus.OK);
+  }
+
+  @PostMapping("/sign-out")
+  public ResponseEntity<MessageResponse> logoutUser() {
+    ResponseCookie cookie = authService.getCleanJwtCookie();
     return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, cookie.toString())
         .body(new MessageResponse(HttpServletResponse.SC_OK, "You've been signed out!"));

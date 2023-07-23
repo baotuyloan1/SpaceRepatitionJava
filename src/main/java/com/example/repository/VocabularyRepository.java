@@ -26,4 +26,7 @@ public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
       "SELECT v FROM Vocabulary v JOIN UserVocabulary uv ON v.id=uv.id.vocabularyId JOIN Topic t ON v.topic.id=t.id WHERE t.id = :topicId AND  uv.id.userId = :userid")
   List<Vocabulary> findLearnedWordByTopicAndUserId(
       @Param("topicId") int topicId, @Param("userid") Long userId);
+
+  @Query("SELECT v FROM Vocabulary v INNER JOIN  v.topic t WHERE t.id = ?1")
+  List<Vocabulary> findVocabulariesByTopicId(int topicId);
 }

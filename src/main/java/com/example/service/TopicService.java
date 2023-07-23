@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.dto.admin.AdminTopicRes;
 import com.example.dto.user.UserTopicRes;
 import com.example.entity.Topic;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * @author BAO 7/7/2023
  */
 public interface TopicService {
-    Topic save(Topic topic);
+    Topic save(Topic topic, MultipartFile img);
 
     List<AdminTopicRes> adminFindByCourseId(int courseId);
 
@@ -18,5 +19,6 @@ public interface TopicService {
 
     void deleteTopicById(int id);
 
-    List<UserTopicRes> userFindByCourseId(int courseId);
+    List<UserTopicRes> userGetTopics(int courseId);
+
 }

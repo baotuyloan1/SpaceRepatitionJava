@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,14 +31,14 @@ public class Topic {
 
   private String titleVn;
 
-
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @ManyToOne
   @JoinColumn(name = "id_course")
   private Course course;
 
+  private String img;
 
   @JsonIgnoreProperties({"question", "topic"})
   @OneToMany(mappedBy = "topic")
-  private List<Vocabulary> vocabulary;
+  private List<Vocabulary> vocabulary = new ArrayList<>();
 }

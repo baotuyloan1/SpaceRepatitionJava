@@ -1,8 +1,10 @@
 package com.example.service;
 
 import com.example.dto.SignUpRequest;
+import com.example.dto.user.auth.MobileSignInRes;
 import com.example.dto.user.auth.UserSignInResponse;
 import com.example.dto.user.auth.UserSignUpResponse;
+import com.example.payload.request.LoginRequest;
 import com.example.security.services.UserDetailsImpl;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
@@ -25,5 +27,9 @@ public interface AuthService {
 
     UserDetailsImpl login(Authentication authentication);
 
-    ResponseCookie getClearnJwtCookie();
+    ResponseCookie getCleanJwtCookie();
+
+    String generateJwtStr(UserDetailsImpl userDetails);
+
+    MobileSignInRes mobileSignIn(LoginRequest loginRequest);
 }

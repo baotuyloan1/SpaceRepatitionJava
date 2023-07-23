@@ -31,27 +31,25 @@ public class AdminVocabularyController {
   private final VocabularyService vocabularyService;
   private final FileUtils fileUtils;
 
-  private final String DEFAULT_MESSAGE_FILE_NULL = "must not be null";
-
-  @PostMapping({"/", ""})
-  public ResponseEntity<?> saveWord(
+  @PostMapping
+  public ResponseEntity<Object> saveWord(
       @Valid @RequestPart(value = "vocabulary", required = false) Vocabulary vocabulary,
       BindingResult bindingResult,
       @RequestPart(value = "audioWord", required = false) MultipartFile audioWord,
       @RequestPart(value = "audioSentence", required = false) MultipartFile audioSentence,
       @RequestPart(value = "img", required = false) MultipartFile img) {
+    String defaultMessageFileNull = "must not be null";
     if (audioWord == null) {
-      bindingResult.addError(new FieldError("audioWord", "audioWord", DEFAULT_MESSAGE_FILE_NULL));
+      bindingResult.addError(new FieldError("audioWord", "audioWord", defaultMessageFileNull));
     }
     if (audioSentence == null) {
       bindingResult.addError(
-          new FieldError("audioSentence", "audioSentence", DEFAULT_MESSAGE_FILE_NULL));
+          new FieldError("audioSentence", "audioSentence", defaultMessageFileNull));
     }
     if (img == null) {
-      bindingResult.addError(new FieldError("img", "img", DEFAULT_MESSAGE_FILE_NULL));
+      bindingResult.addError(new FieldError("img", "img", defaultMessageFileNull));
     }
     if (bindingResult.hasErrors()) {
-
       return new ResponseEntity<>(
           new DefaultFormatValidate(bindingResult.getAllErrors()), HttpStatus.NOT_ACCEPTABLE);
     }
@@ -59,12 +57,12 @@ public class AdminVocabularyController {
         vocabularyService.createWord(vocabulary, audioWord, audioSentence, img), HttpStatus.OK);
   }
 
-  @GetMapping({"/", ""})
+  @GetMapping
   public ResponseEntity<List<AdminVocabularyRes>> getAllVocabulary() {
     return new ResponseEntity<>(vocabularyService.getAllVocabulary(), HttpStatus.OK);
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("{id}")
   public Vocabulary getAudioById(@PathVariable Long id) {
     return vocabularyService.getById(id);
   }
@@ -81,7 +79,7 @@ public class AdminVocabularyController {
   //        return wordService.update(wordEntity, audio);
   //    }
 
-  @PutMapping(value = {"", "/"})
+  @PutMapping
   public void updateWord(
       @RequestBody Vocabulary vocabulary, @RequestParam("audio") MultipartFile audio) {
     vocabularyService.update(vocabulary, audio);

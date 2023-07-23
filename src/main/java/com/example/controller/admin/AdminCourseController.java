@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ public class AdminCourseController {
 
   @GetMapping
   public ResponseEntity<List<AdminCourseRes>> getAllCourses() {
-    return new ResponseEntity<>(courseService.listCourse(), HttpStatus.OK);
+    return new ResponseEntity<>(courseService.adminGetCourses(), HttpStatus.OK);
   }
 
   @PostMapping
@@ -37,7 +36,7 @@ public class AdminCourseController {
   }
 
   @DeleteMapping("{id}")
-  public ResponseEntity<Void> deleteCourse(@PathVariable("id") int courseId) throws SQLException {
+  public ResponseEntity<Void> deleteCourse(@PathVariable("id") int courseId) {
     courseService.deleteCourseById(courseId);
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }

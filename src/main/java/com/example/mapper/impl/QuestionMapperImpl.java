@@ -32,6 +32,11 @@ public class QuestionMapperImpl implements QuestionMapper {
     return questionRes;
   }
 
+  @Override
+  public List<AdminQuestionRes> questionsToAdminQuestionsRes(List<Question> questions) {
+    return questions.stream().map(this::questionToAdminQuestionRes).toList();
+  }
+
   public AdminAnswerRes answerToAdminAnswerRes(Answer answer) {
     AdminAnswerRes answerRes = new AdminAnswerRes();
     answerRes.setAnswer(answer.getAnswer());

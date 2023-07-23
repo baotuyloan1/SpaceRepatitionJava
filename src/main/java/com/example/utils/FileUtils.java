@@ -1,7 +1,7 @@
 package com.example.utils;
 
 import com.example.config.PropertiesConfig;
-import com.example.exception.CustomerException;
+import com.example.exception.ApiRequestException;
 import com.example.service.FileService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -60,7 +60,7 @@ public class FileUtils {
       response.setContentType(MediaType.ALL_VALUE);
       StreamUtils.copy(resource, response.getOutputStream());
     } catch (IOException ex) {
-      throw new CustomerException(ex, "Something went wrong");
+      throw new ApiRequestException(ex, "Something went wrong");
     }
   }
 }

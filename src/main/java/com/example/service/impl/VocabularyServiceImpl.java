@@ -2,7 +2,7 @@ package com.example.service.impl;
 
 import com.example.dto.admin.AdminVocabularyRes;
 import com.example.entity.*;
-import com.example.exception.CustomerException;
+import com.example.exception.ApiRequestException;
 import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.VocabularyMapper;
 import com.example.repository.AnswerRepository;
@@ -24,8 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class VocabularyServiceImpl implements VocabularyService {
 
-
-
   private final FileUtils filenameUtils;
 
   @Value("${dir.resource.audioWord}")
@@ -41,10 +39,12 @@ public class VocabularyServiceImpl implements VocabularyService {
 
   private final AnswerRepository answerRepository;
   private final VocabularyMapper vocabularyMapper;
+
   public VocabularyServiceImpl(
-          VocabularyRepository vocabularyRepository,
-          AnswerRepository answerRepository,
-          FileUtils filenameUtils, VocabularyMapper vocabularyMapper) {
+      VocabularyRepository vocabularyRepository,
+      AnswerRepository answerRepository,
+      FileUtils filenameUtils,
+      VocabularyMapper vocabularyMapper) {
     this.vocabularyRepository = vocabularyRepository;
     this.answerRepository = answerRepository;
     this.filenameUtils = filenameUtils;
@@ -53,7 +53,7 @@ public class VocabularyServiceImpl implements VocabularyService {
 
   @Transactional
   @Override
-  public Vocabulary createWord(
+  public AdminVocabularyRes createWord(
       Vocabulary vocabulary,
       MultipartFile audioWord,
       MultipartFile audioSentence,
@@ -75,10 +75,10 @@ public class VocabularyServiceImpl implements VocabularyService {
       // saveImage
       String imageFileName = filenameUtils.saveFile(img, savedWord.getId(), dirImgWord, "word");
       savedWord.setImg(imageFileName);
-
-      return vocabularyRepository.save(savedWord);
+      savedWord = vocabularyRepository.save(savedWord);
+      return vocabularyMapper.vocabularyToAdminVocabularyResponse(savedWord);
     } catch (IOException e) {
-      throw new CustomerException(e, "Something went wrong");
+      throw new ApiRequestException(e, "Something went wrong");
     }
   }
 
@@ -102,6 +102,12 @@ public class VocabularyServiceImpl implements VocabularyService {
   @Override
   public List<AdminVocabularyRes> getAllVocabulary() {
     List<Vocabulary> vocabularies = vocabularyRepository.findAll();
+    return vocabularyMapper.vocabulariesToAdminVocabulariesRes(vocabularies);
+  }
+
+  @Override
+  public List<AdminVocabularyRes> getVocabulariesByTopicId(int id) {
+    List<Vocabulary> vocabularies = vocabularyRepository.findVocabulariesByTopicId(id);
     return vocabularyMapper.vocabulariesToAdminVocabulariesRes(vocabularies);
   }
 

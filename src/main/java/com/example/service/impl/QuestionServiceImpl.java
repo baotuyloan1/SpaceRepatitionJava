@@ -5,7 +5,7 @@ import com.example.dto.admin.AdminQuestionRes;
 import com.example.entity.Answer;
 import com.example.entity.Question;
 import com.example.entity.Vocabulary;
-import com.example.exception.CustomerException;
+import com.example.exception.ApiRequestException;
 import com.example.mapper.QuestionMapper;
 import com.example.repository.AnswerRepository;
 import com.example.repository.QuestionRepository;
@@ -57,22 +57,25 @@ public class QuestionServiceImpl implements QuestionService {
   }
 
   @Override
-  public List<Question> listQuestion() {
-    return questionRepository.findAll();
+  public List<AdminQuestionRes> listQuestion() {
+    List<Question> questions = questionRepository.findAll();
+    return questionMapper.questionsToAdminQuestionsRes(questions);
   }
 
   @Override
   public void deleteQuestion(Long questionId) {
     questionRepository.deleteById(questionId);
     if (questionRepository.existsById(questionId)) {
-      throw new CustomerException("Delete Question fail, some thing went wrong");
+      throw new ApiRequestException("Delete Question fail, some thing went wrong");
     }
   }
 
   @Override
-  public Question findById(Long questionId) {
-    return questionRepository
-        .findById(questionId)
-        .orElseThrow(() -> new CustomerException("Question not found"));
+  public AdminQuestionRes findById(Long questionId) {
+    Question question =
+        questionRepository
+            .findById(questionId)
+            .orElseThrow(() -> new ApiRequestException("Question not found"));
+    return questionMapper.questionToAdminQuestionRes(question);
   }
 }

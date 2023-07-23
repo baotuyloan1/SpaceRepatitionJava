@@ -1,7 +1,7 @@
 package com.example.mapper.impl;
 
 import com.example.dto.admin.AdminCourseRes;
-import com.example.dto.user.UserCourseResponse;
+import com.example.dto.user.UserCourseRes;
 import com.example.entity.Course;
 import com.example.mapper.CourseMapper;
 import java.util.List;
@@ -11,21 +11,21 @@ import org.springframework.stereotype.Component;
 /**
  * @author BAO 7/19/2023
  */
-@Component
+@Component("courseMapper")
 public class CourseMapperImpl implements CourseMapper {
   @Override
-  public UserCourseResponse courseToUserCourseResponse(Course course) {
-    UserCourseResponse userCourseResponse = new UserCourseResponse();
-    userCourseResponse.setId(course.getId());
-    userCourseResponse.setDescription(course.getDescription());
-    userCourseResponse.setTitle(course.getTitle());
-    userCourseResponse.setTarget(course.getTarget());
-    userCourseResponse.setImg(course.getImg());
-    return userCourseResponse;
+  public UserCourseRes courseToUserCourseResponse(Course course) {
+    UserCourseRes userCourseRes = new UserCourseRes();
+    userCourseRes.setId(course.getId());
+    userCourseRes.setDescription(course.getDescription());
+    userCourseRes.setTitle(course.getTitle());
+    userCourseRes.setTarget(course.getTarget());
+    userCourseRes.setImg(course.getImg());
+    return userCourseRes;
   }
 
   @Override
-  public List<UserCourseResponse> coursesToUserCoursesResponse(List<Course> listCourses) {
+  public List<UserCourseRes> coursesToUserCoursesResponse(List<Course> listCourses) {
     return listCourses.stream().map(this::courseToUserCourseResponse).toList();
   }
 

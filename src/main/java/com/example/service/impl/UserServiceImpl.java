@@ -62,17 +62,8 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new ResourceNotFoundException(false, "User not found"));
   }
 
-  @Override
-  public List<UserCourseResponse> getListCourses() {
-    List<Course> courseList = courseRepository.findAll();
-    return courseMapper.coursesToUserCoursesResponse(courseList);
-  }
 
-  @Transactional
-  @Override
-  public List<UserTopicRes> findTopicByCourseId(int courseId) {
-    return topicService.userFindByCourseId(courseId);
-  }
+
 
   @Transactional
   @Override
@@ -94,7 +85,7 @@ public class UserServiceImpl implements UserService {
               userLearnRes.setLearnTypes(typeLearnResList);
               return userLearnRes;
             })
-        .collect(Collectors.toList());
+        .toList();
   }
 
   public void initLearningTypes(Set<TypeLearnRes> typeLearnResList, Vocabulary vocabulary) {

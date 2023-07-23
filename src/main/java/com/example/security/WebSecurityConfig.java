@@ -96,13 +96,13 @@ public class WebSecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api/admin/**")
+                auth.requestMatchers("/api/v1/admin/**")
                     .hasAnyAuthority(RoleUser.ROLE_ADMIN.name(), RoleUser.ROLE_MANAGEMENT.name())
-                    .requestMatchers("/api/auth/**")
+                    .requestMatchers("/api/v1/auth/**")
                     .permitAll()
-                    .requestMatchers("/api/user/**")
+                    .requestMatchers("/api/v1/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
-                    .requestMatchers("/api/mobile/user/**")
+                    .requestMatchers("/api/v1/mobile/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
                     .anyRequest()
                     .permitAll());

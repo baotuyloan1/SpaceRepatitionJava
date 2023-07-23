@@ -1,7 +1,7 @@
 package com.example.mapper;
 
 import com.example.dto.admin.AdminCourseRes;
-import com.example.dto.user.UserCourseResponse;
+import com.example.dto.user.UserCourseRes;
 import com.example.entity.Course;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface CourseMapper {
 
-  UserCourseResponse courseToUserCourseResponse(Course course);
+  UserCourseRes courseToUserCourseResponse(Course course);
 
-  List<UserCourseResponse> coursesToUserCoursesResponse(List<Course> listCourses);
+  List<UserCourseRes> coursesToUserCoursesResponse(List<Course> listCourses);
 
   AdminCourseRes courseToAdminCourseRes (Course course);
 

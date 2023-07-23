@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 /**
  * @author BAO 7/22/2023
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 })
 @Getter
 @Setter
+@Component
 public class PropertiesConfig {
 
     @Value("${dir.resource.audioWord}")
@@ -24,5 +26,10 @@ public class PropertiesConfig {
     private String pathAudioSentence;
 
     @Value("${dir.resource.imgWord}")
-    private String pathImg;
+    private String pathImgWord;
+
+    @Value("${dir.resource.imgCourse}")
+    private String pathImgCourse;
+    @Value("${dir.resource.imgTopic}")
+    private String pathImgTopic;
 }

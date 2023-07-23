@@ -19,7 +19,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@EqualsAndHashCode
 @Table(name = "vocabulary")
 public class Vocabulary {
 

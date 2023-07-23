@@ -1,12 +1,14 @@
 package com.example.service.impl;
 
 import com.example.dto.SignUpRequest;
+import com.example.dto.user.auth.MobileSignInRes;
 import com.example.dto.user.auth.UserSignInResponse;
 import com.example.dto.user.auth.UserSignUpResponse;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.enums.RoleUser;
 import com.example.mapper.UserMapper;
+import com.example.payload.request.LoginRequest;
 import com.example.repository.RoleRepository;
 import com.example.repository.UserRepository;
 import com.example.security.jwt.JwtUtils;
@@ -17,9 +19,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,25 +35,14 @@ import org.springframework.stereotype.Service;
  * @author BAO 7/19/2023
  */
 @Service
+@AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
   private final UserMapper userMapper;
   private final JwtUtils jwtUtils;
-
-  public AuthServiceImpl(
-      UserRepository userRepository,
-      RoleRepository roleRepository,
-      PasswordEncoder passwordEncoder,
-      UserMapper userMapper,
-      JwtUtils jwtUtils) {
-    this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
-    this.passwordEncoder = passwordEncoder;
-    this.userMapper = userMapper;
-    this.jwtUtils = jwtUtils;
-  }
+  private final AuthenticationManager authenticationManager;
 
   @Override
   public boolean isValidSignUpRequest(SignUpRequest userSignupRequest) {
@@ -62,8 +58,6 @@ public class AuthServiceImpl implements AuthService {
   public boolean isExistEmail(String email) {
     return userRepository.existsByEmail(email);
   }
-
-
 
   @Transactional(rollbackOn = Exception.class)
   @Override
@@ -104,9 +98,7 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public UserSignInResponse getInfoUserSignIn(UserDetailsImpl userDetails) {
     List<String> roles =
-        userDetails.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList());
+        userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
     return new UserSignInResponse(
         userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles);
   }
@@ -117,8 +109,26 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public ResponseCookie getClearnJwtCookie() {
+  public ResponseCookie getCleanJwtCookie() {
     return jwtUtils.getClearnJwtCookie();
+  }
+
+  @Override
+  public String generateJwtStr(UserDetailsImpl userDetails) {
+    return jwtUtils.generateJwtToken(userDetails);
+  }
+
+  @Override
+  public MobileSignInRes mobileSignIn(LoginRequest loginRequest) {
+    Authentication authentication =
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(), loginRequest.getPassword()));
+    UserDetailsImpl userDetails = login(authentication);
+    String jwt = jwtUtils.generateTokenFromUserName(userDetails.getUsername());
+    List<String> roles =
+        userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+    return new MobileSignInRes(userDetails.getId(), roles, jwt);
   }
 
   @Override

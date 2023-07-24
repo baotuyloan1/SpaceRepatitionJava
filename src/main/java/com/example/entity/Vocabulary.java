@@ -68,7 +68,7 @@ public class Vocabulary {
   @JoinColumn(name = "topic_id")
   private Topic topic;
 
-  @OneToMany(mappedBy = "vocabulary")
+  @OneToMany(mappedBy = "vocabulary", cascade = CascadeType.ALL)
   private List<Question> question;
 
 

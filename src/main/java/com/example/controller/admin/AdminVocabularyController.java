@@ -1,10 +1,11 @@
 package com.example.controller.admin;
 
-import com.example.config.PropertiesConfig;
 import com.example.dto.DefaultFormatValidate;
+import com.example.dto.admin.AdminQuestionRes;
 import com.example.dto.admin.AdminVocabularyRes;
+import com.example.entity.Question;
 import com.example.entity.Vocabulary;
-import com.example.service.FileService;
+import com.example.service.QuestionService;
 import com.example.service.VocabularyService;
 import com.example.utils.FileUtils;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ public class AdminVocabularyController {
 
   private final VocabularyService vocabularyService;
   private final FileUtils fileUtils;
+  private final QuestionService questionService;
 
   @PostMapping
   public ResponseEntity<Object> saveWord(
@@ -85,8 +87,20 @@ public class AdminVocabularyController {
     vocabularyService.update(vocabulary, audio);
   }
 
+  @GetMapping("{id}/questions")
+  public ResponseEntity<List<AdminQuestionRes>> getQuestionByWordId(@PathVariable long id) {
+    List<AdminQuestionRes> question = questionService.adminQuestionsByWordId(id);
+    return new ResponseEntity<>(question, HttpStatus.OK);
+  }
+
   @GetMapping(value = "/playAudio/{fileName}")
   public void playAudio(@PathVariable String fileName, HttpServletResponse response) {
     fileUtils.playAudio(fileName, response);
   }
+
+//  @DeleteMapping(value = "{id}")
+//  public ResponseEntity<Void> deleteVocabulary(@PathVariable("id") long id) {
+//    vocabularyService.deleteById(id);
+//    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//  }
 }

@@ -34,7 +34,7 @@ public class CourseMapperImpl implements CourseMapper {
     AdminCourseRes adminCourseRes = new AdminCourseRes();
     adminCourseRes.setId(course.getId());
     adminCourseRes.setDescription(course.getDescription());
-    adminCourseRes.setTitle(course.getDescription());
+    adminCourseRes.setTitle(course.getTitle());
     adminCourseRes.setTarget(course.getTarget());
     adminCourseRes.setImg(course.getImg());
     return adminCourseRes;

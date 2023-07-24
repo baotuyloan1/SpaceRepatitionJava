@@ -96,14 +96,14 @@ public class WebSecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api/v1/admin/**")
-                    .hasAnyAuthority(RoleUser.ROLE_ADMIN.name(), RoleUser.ROLE_MANAGEMENT.name())
-                    .requestMatchers("/api/v1/auth/**")
+                auth.requestMatchers("/api/v1/auth/**")
                     .permitAll()
                     .requestMatchers("/api/v1/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
                     .requestMatchers("/api/v1/mobile/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
+                    .requestMatchers("/api/v1/**")
+                    .hasAnyAuthority(RoleUser.ROLE_ADMIN.name(), RoleUser.ROLE_MANAGEMENT.name())
                     .anyRequest()
                     .permitAll());
     httpSecurity.authenticationProvider(authenticationProvider());
@@ -115,7 +115,8 @@ public class WebSecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://116.105.222.85:8081"));
+    configuration.setAllowedOrigins(
+        Arrays.asList("http://localhost:3000", "http://116.105.222.85:8081"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
     configuration.setAllowCredentials(true);

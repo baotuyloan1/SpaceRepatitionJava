@@ -38,7 +38,6 @@ public class Topic {
 
   private String img;
 
-  @JsonIgnoreProperties({"question", "topic"})
-  @OneToMany(mappedBy = "topic")
+  @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL)
   private List<Vocabulary> vocabulary = new ArrayList<>();
 }

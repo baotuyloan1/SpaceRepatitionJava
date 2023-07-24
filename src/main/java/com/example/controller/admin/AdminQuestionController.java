@@ -22,8 +22,7 @@ public class AdminQuestionController {
   private final QuestionService questionService;
 
   @PostMapping
-  public ResponseEntity<AdminQuestionRes> createQuestion(
-      @RequestBody QuestionRequestDto questionRequestDto) {
+  public ResponseEntity<Long> createQuestion(@RequestBody QuestionRequestDto questionRequestDto) {
     return new ResponseEntity<>(questionService.save(questionRequestDto), HttpStatus.CREATED);
   }
 

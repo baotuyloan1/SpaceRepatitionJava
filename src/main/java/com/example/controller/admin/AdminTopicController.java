@@ -8,6 +8,7 @@ import com.example.service.TopicService;
 import java.util.List;
 
 import com.example.service.VocabularyService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,11 +38,12 @@ public class AdminTopicController {
     return new ResponseEntity<>(topicService.listAll(), HttpStatus.OK);
   }
 
-  @DeleteMapping("{id}")
-  public ResponseEntity<Void> deleteTopicById(@PathVariable("id") int id) {
-    topicService.deleteTopicById(id);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
+//  @Transactional
+//  @DeleteMapping("{id}")
+//  public ResponseEntity<Void> deleteTopicById(@PathVariable("id") int id) {
+//    topicService.deleteTopicById(id);
+//    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//  }
 
   @GetMapping("{id}/vocabularies")
   public ResponseEntity<List<AdminVocabularyRes>> getVocabulariesByTopicId(

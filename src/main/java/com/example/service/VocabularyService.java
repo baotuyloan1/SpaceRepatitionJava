@@ -33,4 +33,5 @@ public interface VocabularyService {
     List<Vocabulary> getLearnedWordInTopicByUserId(Topic topic, Long userId);
 
 
+    void deleteById(long id);
 }

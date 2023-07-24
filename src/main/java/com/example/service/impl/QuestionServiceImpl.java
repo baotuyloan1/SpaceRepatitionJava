@@ -38,7 +38,7 @@ public class QuestionServiceImpl implements QuestionService {
 
   @Transactional
   @Override
-  public AdminQuestionRes save(QuestionRequestDto questionRequestDto) {
+  public Long save(QuestionRequestDto questionRequestDto) {
     Question question = new Question();
     question.setQuestion(questionRequestDto.getQuestion());
     Vocabulary vocabulary = new Vocabulary();
@@ -53,13 +53,20 @@ public class QuestionServiceImpl implements QuestionService {
     question.setAnswer(savedAnswers.get(questionRequestDto.getIndexRightAnswer()));
     question.setAnswers(savedAnswers);
     Question savedQuestionNew = questionRepository.save(question);
-    return questionMapper.questionToAdminQuestionRes(savedQuestionNew);
+    return savedQuestionNew.getId();
   }
 
   @Transactional
   @Override
   public List<AdminQuestionRes> listQuestion() {
     List<Question> questions = questionRepository.findAll();
+    return questionMapper.questionsToAdminQuestionsRes(questions);
+  }
+
+  @Transactional
+  @Override
+  public List<AdminQuestionRes> adminQuestionsByWordId(long wordId) {
+    List<Question> questions = questionRepository.findByWordId(wordId);
     return questionMapper.questionsToAdminQuestionsRes(questions);
   }
 

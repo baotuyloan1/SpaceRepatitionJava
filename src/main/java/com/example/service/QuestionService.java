@@ -1,13 +1,9 @@
 package com.example.service;
 
 import com.example.dto.QuestionRequestDto;
-import com.example.dto.admin.AdminCourseRes;
 import com.example.dto.admin.AdminQuestionRes;
-import com.example.dto.user.UserAnswerReponse;
-import com.example.entity.Question;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author BAO 7/8/2023
@@ -15,9 +11,10 @@ import java.util.Set;
 
 
 public interface QuestionService {
-    AdminQuestionRes save(QuestionRequestDto question);
+    Long save(QuestionRequestDto question);
 
     List<AdminQuestionRes> listQuestion();
+    List<AdminQuestionRes> adminQuestionsByWordId(long wordId);
 
     void deleteQuestion(Long questionId);
 

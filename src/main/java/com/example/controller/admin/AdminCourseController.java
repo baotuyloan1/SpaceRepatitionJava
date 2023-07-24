@@ -35,11 +35,11 @@ public class AdminCourseController {
     return new ResponseEntity<>(courseService.save(course, img).getId(), HttpStatus.CREATED);
   }
 
-  @DeleteMapping("{id}")
-  public ResponseEntity<Void> deleteCourse(@PathVariable("id") int courseId) {
-    courseService.deleteCourseById(courseId);
-    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-  }
+//  @DeleteMapping("{id}")
+//  public ResponseEntity<Void> deleteCourse(@PathVariable("id") int courseId) {
+//    courseService.deleteCourseById(courseId);
+//    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//  }
 
   @GetMapping("{id}/topics")
   public ResponseEntity<List<AdminTopicRes>> getTopics(@PathVariable("id") int courseId) {

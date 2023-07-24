@@ -105,6 +105,7 @@ public class VocabularyServiceImpl implements VocabularyService {
     return vocabularyMapper.vocabulariesToAdminVocabulariesRes(vocabularies);
   }
 
+  @Transactional
   @Override
   public List<AdminVocabularyRes> getVocabulariesByTopicId(int id) {
     List<Vocabulary> vocabularies = vocabularyRepository.findVocabulariesByTopicId(id);
@@ -178,5 +179,10 @@ public class VocabularyServiceImpl implements VocabularyService {
   @Override
   public List<Vocabulary> getLearnedWordInTopicByUserId(Topic topic, Long userId) {
     return vocabularyRepository.findLearnedWordByTopicAndUserId(topic.getId(), userId);
+  }
+
+  @Override
+  public void deleteById(long id) {
+    vocabularyRepository.deleteById(id);
   }
 }

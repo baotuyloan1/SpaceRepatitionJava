@@ -13,6 +13,8 @@ public class UserLearnRes {
     private long vocabularyId;
     private String word;
     private String meaningWord;
+    private String type;
+    private String ipa;
     private String sentence;
     private String meaningSentence;
     private String audioSentence;

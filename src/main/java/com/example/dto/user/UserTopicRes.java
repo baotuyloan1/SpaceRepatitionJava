@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserTopicRes extends TopicResponseTemp {
     private boolean learnedAll;
+    private String img;
 
     public UserTopicRes(int id, String titleEn, String titleVn, boolean learnedAll) {
         super(id, titleEn, titleVn);

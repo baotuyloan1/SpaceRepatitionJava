@@ -34,6 +34,8 @@ public class VocabularyMapperImpl implements VocabularyMapper {
     userLearnRes.setWord(vocabulary.getWord());
     userLearnRes.setMeaningWord(vocabulary.getMeaningWord());
     userLearnRes.setMeaningSentence(vocabulary.getMeaningSentence());
+    userLearnRes.setIpa(vocabulary.getIpa());
+    userLearnRes.setType(vocabulary.getType());
     return userLearnRes;
   }
 

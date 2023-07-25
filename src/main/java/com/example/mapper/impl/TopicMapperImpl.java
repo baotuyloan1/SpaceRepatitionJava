@@ -6,12 +6,7 @@ import com.example.entity.Topic;
 import com.example.mapper.CourseMapper;
 import com.example.mapper.TopicMapper;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,6 +36,7 @@ public class TopicMapperImpl implements TopicMapper {
     userTopicRes.setId(topic.getId());
     userTopicRes.setTitleEn(topic.getTitleEn());
     userTopicRes.setTitleVn(topic.getTitleEn());
+    userTopicRes.setImg(topic.getImg());
     return userTopicRes;
   }
 

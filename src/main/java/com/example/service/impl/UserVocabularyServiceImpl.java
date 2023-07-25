@@ -121,6 +121,14 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
           userVocabularyRepository.getVocabularyBeforeCurrent(
               userDetails.getId(), new Date(nearestDate.getTime() + 60 * 60 * 1000));
     }
+
+    /**
+     * Ôn tập
+     *
+     * 20% từ đó là trac nghiem 40% tu do la nghe, 40% dien` tu
+     */
+
+
     List<Map<String, Object>> objectWords = new LinkedList<>();
     for (UserVocabulary userVocabulary : userVocabularyList) {
       Map<String, Object> word = new LinkedHashMap<>();

@@ -102,6 +102,8 @@ public class WebSecurityConfig {
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
                     .requestMatchers("/api/v1/mobile/user/**")
                     .hasAnyAuthority(RoleUser.ROLE_USER.name())
+                    .requestMatchers("/api/v1/audio/**")
+                    .permitAll()
                     .requestMatchers("/api/v1/**")
                     .hasAnyAuthority(RoleUser.ROLE_ADMIN.name(), RoleUser.ROLE_MANAGEMENT.name())
                     .anyRequest()

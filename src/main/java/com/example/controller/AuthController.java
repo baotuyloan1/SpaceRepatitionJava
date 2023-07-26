@@ -1,9 +1,9 @@
 package com.example.controller;
 
-import com.example.dto.user.auth.MobileSignInRes;
-import com.example.dto.user.auth.UserSignInResponse;
-import com.example.dto.user.auth.UserSignUpRequest;
-import com.example.dto.user.auth.UserSignUpResponse;
+import com.example.dto.auth.MobileSignInRes;
+import com.example.dto.auth.UserSignInResponse;
+import com.example.dto.auth.UserSignUpRequest;
+import com.example.dto.auth.UserSignUpResponse;
 import com.example.exception.ApiRequestException;
 import com.example.exception.ErrorResponse;
 import com.example.payload.request.LoginRequest;

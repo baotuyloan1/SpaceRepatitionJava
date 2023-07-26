@@ -1,8 +1,7 @@
 package com.example.controller.admin;
 
-import com.example.dto.QuestionRequestDto;
+import com.example.dto.admin.QuestionRequestDto;
 import com.example.dto.admin.AdminQuestionRes;
-import com.example.entity.Question;
 import com.example.service.QuestionService;
 import java.util.List;
 

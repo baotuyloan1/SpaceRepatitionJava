@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.dto.QuestionRequestDto;
+import com.example.dto.admin.QuestionRequestDto;
 import com.example.dto.admin.AdminQuestionRes;
 
 import java.util.List;

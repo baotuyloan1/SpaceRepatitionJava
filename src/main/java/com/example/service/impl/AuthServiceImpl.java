@@ -1,9 +1,9 @@
 package com.example.service.impl;
 
 import com.example.dto.SignUpRequest;
-import com.example.dto.user.auth.MobileSignInRes;
-import com.example.dto.user.auth.UserSignInResponse;
-import com.example.dto.user.auth.UserSignUpResponse;
+import com.example.dto.auth.MobileSignInRes;
+import com.example.dto.auth.UserSignInResponse;
+import com.example.dto.auth.UserSignUpResponse;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.enums.RoleUser;
@@ -18,7 +18,6 @@ import jakarta.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseCookie;
@@ -26,7 +25,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

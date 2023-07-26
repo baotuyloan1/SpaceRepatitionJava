@@ -1,9 +1,9 @@
 package com.example.service;
 
 import com.example.dto.SignUpRequest;
-import com.example.dto.user.auth.MobileSignInRes;
-import com.example.dto.user.auth.UserSignInResponse;
-import com.example.dto.user.auth.UserSignUpResponse;
+import com.example.dto.auth.MobileSignInRes;
+import com.example.dto.auth.UserSignInResponse;
+import com.example.dto.auth.UserSignUpResponse;
 import com.example.payload.request.LoginRequest;
 import com.example.security.services.UserDetailsImpl;
 import org.springframework.http.ResponseCookie;

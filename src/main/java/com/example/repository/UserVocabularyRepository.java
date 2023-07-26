@@ -19,9 +19,9 @@ public interface UserVocabularyRepository extends JpaRepository<UserVocabulary, 
 //      "SELECT uv FROM UserVocabulary uv WHERE (uv.endDate < ?2 ) OR uv.endDate BETWEEN (SELECT MIN(uv.endDate)FROM uv) AND ((SELECT MIN(uv.endDate) FROM uv ) + 2*60 * 60) AND uv.id.userId = ?1 ")
 //  List<UserVocabulary> getUserVocabularyNearest(long userid, Date currentDate);
 
-  @Query("SELECT MIN(uv.endDate) FROM UserVocabulary  uv WHERE  uv.user.id = ?1")
+  @Query("SELECT MIN(uv.reviewDate) FROM UserVocabulary  uv WHERE  uv.user.id = ?1")
   Date getNearestDate(long userid);
 
-  @Query("SELECT uv FROM UserVocabulary uv  WHERE uv.user.id = ?1 AND  uv.endDate < ?2 ORDER BY uv.endDate ASC")
+  @Query("SELECT uv FROM UserVocabulary uv  WHERE uv.user.id = ?1 AND  uv.reviewDate < ?2 ORDER BY uv.reviewDate ASC")
   List<UserVocabulary> getVocabularyBeforeCurrent(Long id, Date date);
 }

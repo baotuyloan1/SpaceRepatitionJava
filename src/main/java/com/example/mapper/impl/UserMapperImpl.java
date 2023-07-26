@@ -1,6 +1,6 @@
 package com.example.mapper.impl;
 
-import com.example.dto.user.auth.UserSignUpResponse;
+import com.example.dto.auth.UserSignUpResponse;
 import com.example.entity.User;
 import com.example.mapper.UserMapper;
 import org.springframework.stereotype.Component;

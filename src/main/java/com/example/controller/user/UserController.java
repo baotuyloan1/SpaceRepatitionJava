@@ -1,9 +1,10 @@
 package com.example.controller.user;
 
 import com.example.dto.user.*;
+import com.example.dto.user.learn.UserSelectReq;
+import com.example.dto.user.learn.UserSelectRes;
 import com.example.service.*;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,25 +38,38 @@ public class UserController {
 
   @GetMapping("/topics/{id}/vocabularies")
   public ResponseEntity<List<UserLearnRes>> listVocabulary(@PathVariable("id") int topicId) {
-    return new ResponseEntity<>(userService.getVocabulariesByTopicId(topicId), HttpStatus.OK);
+    return new ResponseEntity<>(
+        userVocabularyService.getVocabulariesByTopicId(topicId), HttpStatus.OK);
   }
 
-  @PostMapping("/saveNewWord")
-  public ResponseEntity<?> saveLearnedVocabulary(
-      @RequestBody LearnedVocabularyRequest learnedVocabularyRequest) {
-    userVocabularyService.saveNewLearnedVocabulary(learnedVocabularyRequest.getIdVocabulary());
-    return new ResponseEntity<>("Saved learned word", HttpStatus.CREATED);
+//  @PostMapping("/saveNewWord")
+//  public ResponseEntity<?> saveLearnedVocabulary(
+//      @RequestBody LearnedVocabularyRequest learnedVocabularyRequest) {
+//    userVocabularyService.saveNewLearnedVocabulary(learnedVocabularyRequest.getIdVocabulary());
+//    return new ResponseEntity<>("Saved learned word", HttpStatus.CREATED);
+//  }
+
+  @PostMapping("/newSelect")
+  public ResponseEntity<UserSelectRes> learnNewSelect(@RequestBody UserSelectReq req) {
+    UserSelectRes res = userVocabularyService.saveNewVocabulary(req);
+    return new ResponseEntity<>(res, HttpStatus.OK);
+  }
+
+  @PutMapping("/reviewSelect")
+  public ResponseEntity<UserSelectRes> reviewSelect(@RequestBody UserSelectReq req){
+    UserSelectRes res = userVocabularyService.updateReviewVocabulary(req);
+    return null;
   }
 
   @PostMapping("/updateVocabulary")
-  public ResponseEntity<?> updateLeanredVocabulary(
+  public ResponseEntity<?> updateLearnedVocabulary(
       @RequestBody UserVocabularyRequest userVocabularyRequest) {
     userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
     return new ResponseEntity<>("Updated learned word", HttpStatus.OK);
   }
 
   @GetMapping("/getNextWordToReview")
-  public ResponseEntity<?> getTimeToReview() {
+  public ResponseEntity<List<UserLearnRes>> getTimeToReview() {
     return ResponseEntity.ok().body(userVocabularyService.getNextWordToReview());
   }
 }

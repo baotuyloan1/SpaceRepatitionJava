@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author BAO 7/8/2023
@@ -34,7 +33,7 @@ public class Question {
     @JsonIgnoreProperties("question")
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "right_answer_id")
-    private Answer answer;
+    private Answer rightAnswer;
 
     @JsonIgnoreProperties("question")
     @ManyToOne

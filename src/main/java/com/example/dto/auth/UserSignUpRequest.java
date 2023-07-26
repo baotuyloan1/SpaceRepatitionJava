@@ -1,4 +1,4 @@
-package com.example.dto.user.auth;
+package com.example.dto.auth;
 
 import com.example.dto.SignUpRequest;
 import lombok.AllArgsConstructor;

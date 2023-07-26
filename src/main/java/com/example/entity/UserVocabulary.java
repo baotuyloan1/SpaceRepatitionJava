@@ -30,20 +30,25 @@ public class UserVocabulary {
 
   @ManyToOne
   @MapsId("id")
-  @JoinColumn(name = "id_vocabulary",referencedColumnName = "id")
+  @JoinColumn(name = "id_vocabulary", referencedColumnName = "id")
   @JsonIgnoreProperties("question")
   private Vocabulary vocabulary;
 
   @Column(name = "submit_date", columnDefinition = "datetime")
   private Date submitDate;
 
-  @Column(name = "current_FE", columnDefinition = "DECIMAL(4,3)")
-  private float currentFE;
+  @Column(name = "ef", columnDefinition = "DECIMAL(4,3)")
+  private float ef;
 
-  private Date endDate;
+  @Column(name = "review_date", columnDefinition = "datetime")
+  private Date reviewDate;
 
-  private short countFalse;
-  private long timeRepetition;
+  @Column(name = "q", columnDefinition = "tinyint")
+  private short q;
+
+  @Column(name = "count_learn")
+  private int countLearn;
+
 
   public UserVocabulary(User user, Vocabulary vocabulary) {
     this.id = new UserVocabularyId(user.getId(), vocabulary.getId());

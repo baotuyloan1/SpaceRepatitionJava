@@ -1,4 +1,4 @@
-package com.example.dto;
+package com.example.dto.admin;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

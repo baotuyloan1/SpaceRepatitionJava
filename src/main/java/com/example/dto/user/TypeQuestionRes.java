@@ -20,7 +20,6 @@ public class TypeQuestionRes extends TypeLearnRes {
   private String question;
   private long idRightAnswer;
   private Set<UserAnswerReponse> answers;
-
   public TypeQuestionRes(String type, long idQuestion, String question, long idRightAnswer, Set<UserAnswerReponse> answers) {
     super(type);
     this.idQuestion = idQuestion;

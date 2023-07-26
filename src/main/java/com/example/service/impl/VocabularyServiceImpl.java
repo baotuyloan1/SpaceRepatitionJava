@@ -150,7 +150,7 @@ public class VocabularyServiceImpl implements VocabularyService {
         // dùng foreach lấy từ bảng ra các đáp án của question id
         List<Answer> listAnswer = answerRepository.findByQuestionId(currentQuestion.getId());
         map.put("answers", listAnswer);
-        map.put("rightQuestionId", currentQuestion.getAnswer().getId());
+        map.put("rightQuestionId", currentQuestion.getRightAnswer().getId());
         learningTypes.add(map);
       }
       /** Nghe phát âm từ và điền lại từ cho đúng */

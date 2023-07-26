@@ -1,9 +1,11 @@
 package com.example.service;
 
+import com.example.dto.user.UserLearnRes;
 import com.example.dto.user.UserVocabularyRequest;
+import com.example.dto.user.learn.UserSelectReq;
+import com.example.dto.user.learn.UserSelectRes;
 import com.example.entity.UserVocabulary;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,11 +14,15 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserVocabularyService {
 
-  UserVocabulary saveNewLearnedVocabulary(long id);
+  UserVocabulary saveLearnNewWord(long id, boolean isLearnAgain);
 
   UserVocabulary updateLearnedVocabulary(UserVocabularyRequest userVocabularyRequest);
 
-  List<Map<String, Object>> getNextWordToReview();
+  List<UserLearnRes> getNextWordToReview();
 
+  List<UserLearnRes> getVocabulariesByTopicId(int topicId);
 
+  UserSelectRes saveNewVocabulary(UserSelectReq req);
+
+  UserSelectRes updateReviewVocabulary(UserSelectReq req);
 }

@@ -34,7 +34,7 @@ public class QuestionMapperImpl implements QuestionMapper {
     questionRes.setId(question.getId());
     questionRes.setVocabulary(
         vocabularyMapper.vocabularyToAdminVocabularyResponse(question.getVocabulary()));
-    questionRes.setRightAnswer(answerToAdminAnswerRes(question.getAnswer()));
+    questionRes.setRightAnswer(answerToAdminAnswerRes(question.getRightAnswer()));
     questionRes.setAnswers(answersToAdminAnswersRes(question.getAnswers()));
     return questionRes;
   }

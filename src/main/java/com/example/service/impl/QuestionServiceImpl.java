@@ -1,6 +1,6 @@
 package com.example.service.impl;
 
-import com.example.dto.QuestionRequestDto;
+import com.example.dto.admin.QuestionRequestDto;
 import com.example.dto.admin.AdminQuestionRes;
 import com.example.entity.Answer;
 import com.example.entity.Question;
@@ -50,7 +50,7 @@ public class QuestionServiceImpl implements QuestionService {
       answerList.add(new Answer(null, answer, savedQuestion));
     }
     List<Answer> savedAnswers = answerRepository.saveAll(answerList);
-    question.setAnswer(savedAnswers.get(questionRequestDto.getIndexRightAnswer()));
+    question.setRightAnswer(savedAnswers.get(questionRequestDto.getIndexRightAnswer()));
     question.setAnswers(savedAnswers);
     Question savedQuestionNew = questionRepository.save(question);
     return savedQuestionNew.getId();

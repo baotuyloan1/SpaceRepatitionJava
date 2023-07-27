@@ -6,9 +6,8 @@ import lombok.Setter;
 /**
  * @author ADMIN 7/26/2023
  */
-@Setter
 @Getter
-public class UserSelectReq {
-  private long idQuestion;
-  private int idAnswer;
+@Setter
+public class UserReviewListeningReq extends UserReviewReq{
+
 }

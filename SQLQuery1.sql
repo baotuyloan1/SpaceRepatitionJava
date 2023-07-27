@@ -117,29 +117,17 @@ ADD topic_id INT,
     REFERENCES dbo.topic;
 
 
-CREATE TABLE user_vocabulary
-(
-    id_user BIGINT,
-    id_vocabulary BIGINT,
-    submit_date DATETIME,
-    current_FE DECIMAL(4,3),
-    count_false SMALLINT
-        DEFAULT 0,
-    time_repetition INT
-        DEFAULT 1,
-		rate_q TINYINT DEFAULT 5,
-    CONSTRAINT PK_Clustered
-        PRIMARY KEY (
-                        id_user,
-                        id_vocabulary
-                    ),
-    CONSTRAINT FK_User
-        FOREIGN KEY (id_user)
-        REFERENCES dbo.users (id),
-    CONSTRAINT FK_NewWord
-        FOREIGN KEY (id_vocabulary)
-        REFERENCES dbo.vocabulary (id),
-);
+CREATE TABLE user_vocabulary (
+  id_user BIGINT, 
+  id_vocabulary BIGINT, 
+  ef DECIMAL(4, 3), 
+  q TINYINT DEFAULT 5, 
+  submit_date DATETIME,
+  review_date DATETIME,
+  CONSTRAINT PK_Clustered PRIMARY KEY (id_user, id_vocabulary), 
+ /* CONSTRAINT FK_User FOREIGN KEY (id_user) REFERENCES dbo.users (id), 
+  CONSTRAINT FK_NewWord FOREIGN KEY (id_vocabulary) REFERENCES dbo.vocabulary (id), */
+  );
 
 
 CREATE TABLE course
@@ -228,6 +216,7 @@ ADD CONSTRAINT FK_Anwer
     REFERENCES dbo.answer (id);
 
 
+	/*
 SELECT v.*
 FROM dbo.vocabulary v
 WHERE v.id NOT IN
@@ -255,3 +244,5 @@ FROM course_topic t1_0
         ON t1_1.id = t1_0.topic_id
     LEFT JOIN course c1_0
         ON c1_0.id = t1_1.course_id;
+		--
+		*/

@@ -6,9 +6,8 @@ import lombok.Setter;
 /**
  * @author ADMIN 7/26/2023
  */
-@Getter
 @Setter
-public class UserListeningReq {
-  private long vocabularyId;
-  private String answer;
+@Getter
+public class UserLearnNewReq {
+  private long  idVocabulary;
 }

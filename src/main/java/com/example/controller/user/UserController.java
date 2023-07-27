@@ -1,8 +1,9 @@
 package com.example.controller.user;
 
 import com.example.dto.user.*;
-import com.example.dto.user.learn.UserSelectReq;
-import com.example.dto.user.learn.UserSelectRes;
+import com.example.dto.user.learn.*;
+import com.example.entity.UserVocabularyId;
+import com.example.repository.VocabularyRepository;
 import com.example.service.*;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ public class UserController {
   private final VocabularyService vocabularyService;
   private final UserVocabularyService userVocabularyService;
   private final CourseService courseService;
+  private final VocabularyRepository vocabularyRepository;
 
   @GetMapping("/courses")
   public ResponseEntity<List<UserCourseRes>> getAllCourses() {
@@ -42,34 +44,39 @@ public class UserController {
         userVocabularyService.getVocabulariesByTopicId(topicId), HttpStatus.OK);
   }
 
-//  @PostMapping("/saveNewWord")
-//  public ResponseEntity<?> saveLearnedVocabulary(
-//      @RequestBody LearnedVocabularyRequest learnedVocabularyRequest) {
-//    userVocabularyService.saveNewLearnedVocabulary(learnedVocabularyRequest.getIdVocabulary());
-//    return new ResponseEntity<>("Saved learned word", HttpStatus.CREATED);
-//  }
+  /**
+   * Learn over three types must post to this method
+   *
+   * @param req
+   * @return
+   */
+  @PostMapping("/learn-new")
+  public ResponseEntity<UserVocabularyId> learnNewSelect(@RequestBody UserLearnNewReq req) {
+    UserVocabularyId res = userVocabularyService.createUserVocabulary(req);
+    return new ResponseEntity<>(res, HttpStatus.CREATED);
+  }
 
-  @PostMapping("/newSelect")
-  public ResponseEntity<UserSelectRes> learnNewSelect(@RequestBody UserSelectReq req) {
-    UserSelectRes res = userVocabularyService.saveNewVocabulary(req);
+  @PutMapping("/review-selection")
+  public ResponseEntity<UserReviewRes> reviewSelection(@RequestBody UserReviewSelectionReq req) {
+    UserReviewRes res = userVocabularyService.updateReviewSelect(req);
     return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
-  @PutMapping("/reviewSelect")
-  public ResponseEntity<UserSelectRes> reviewSelect(@RequestBody UserSelectReq req){
-    UserSelectRes res = userVocabularyService.updateReviewVocabulary(req);
-    return null;
+  @PutMapping("/review-meaning")
+  public ResponseEntity<UserReviewRes> reviewMeaning(@RequestBody UserReviewMeaningReq req) {
+    UserReviewRes res = userVocabularyService.updateReview(req);
+    return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
   @PostMapping("/updateVocabulary")
   public ResponseEntity<?> updateLearnedVocabulary(
       @RequestBody UserVocabularyRequest userVocabularyRequest) {
-    userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
+    //    userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
     return new ResponseEntity<>("Updated learned word", HttpStatus.OK);
   }
 
   @GetMapping("/getNextWordToReview")
   public ResponseEntity<List<UserLearnRes>> getTimeToReview() {
-    return ResponseEntity.ok().body(userVocabularyService.getNextWordToReview());
+    return ResponseEntity.ok().body(userVocabularyService.getWordToReview());
   }
 }

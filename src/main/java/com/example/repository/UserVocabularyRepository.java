@@ -23,5 +23,5 @@ public interface UserVocabularyRepository extends JpaRepository<UserVocabulary, 
   Date getNearestDate(long userid);
 
   @Query("SELECT uv FROM UserVocabulary uv  WHERE uv.user.id = ?1 AND  uv.reviewDate < ?2 ORDER BY uv.reviewDate ASC")
-  List<UserVocabulary> getVocabularyBeforeCurrent(Long id, Date date);
+  List<UserVocabulary> getVocabulariesAfterCurrent(Long id, Date date);
 }

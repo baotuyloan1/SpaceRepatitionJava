@@ -6,8 +6,9 @@ import lombok.Setter;
 /**
  * @author ADMIN 7/26/2023
  */
-@Setter
 @Getter
-public class UserSelectRes {
-    private boolean learnAgain;
+@Setter
+public class UserReviewMeaningReq extends UserReviewReq {
+
+
 }

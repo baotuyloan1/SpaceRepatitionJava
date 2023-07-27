@@ -1,16 +1,37 @@
 Áp dụng thuật toán SM-2
+
 Link tham khảo: https://super-memory.com/english/ol/sm2.htm
+
 Link FE online: http://116.105.222.85:8081/
-SuperMemo2
 
-- I(1):=1
-- I(2):=6
-- for n>2 I(n):=I(n-1)*EF
+_SuperMemo2_
+1 số thuật toán cơ bản
 
-trong đó
+I(1):=1
+I(2):=6
+for n>2 I(n):=I(n-1)*EF
 
-- EF (E-Factor): hệ số độ dễ, phản ánh độ dễ hay khó của đối tượng trong việc ghi nhớ.
-- I(n) (interval): trả về khoảng thời gian đối tượng sẽ lặp lại (tính bằng ngày) sau n lần thử
+where:
+
+- I(n) - inter-repetition interval after the n-th repetition (in days)
+- EF - easiness factor reflecting the easiness of memorizing and retaining a given item in memory (later called the E-Factor).
+
+EF':=f(EF,q)
+
+where:
+
+EF' - new value of the E-Factor
+EF - old value of the E-Factor
+q - quality of the response
+f - function used in calculating EF'.
+
+EF':=EF-0.8+0.28*q-0.02*q*q
+
+which is a reduced form of:
+
+EF':=EF+(0.1-(5-q)*(0.08+(5-q)*0.02))
+
+
 
 Ở đây em thay I(2) = 3 thay vì phải bằng 6
 ```java

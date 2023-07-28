@@ -1,4 +1,6 @@
-Áp dụng thuật toán SM-2
+Dự án này là 1 trang web nhắc nhỏ ôn tập từ vựng tiếng anh, áp dụng thuật toán
+SuperMemo-2 giúp cho việc ghi nhớ từ vựng dễ dàng hơn
+
 
 Link tham khảo: https://super-memory.com/english/ol/sm2.htm
 

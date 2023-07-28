@@ -79,4 +79,7 @@ public class UserController {
   public ResponseEntity<List<UserLearnRes>> getTimeToReview() {
     return ResponseEntity.ok().body(userVocabularyService.getWordToReview());
   }
+
+
+
 }

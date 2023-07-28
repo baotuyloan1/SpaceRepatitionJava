@@ -124,6 +124,8 @@ CREATE TABLE user_vocabulary (
   q TINYINT DEFAULT 5, 
   submit_date DATETIME,
   review_date DATETIME,
+  day_interval INT,
+  count_learn INT
   CONSTRAINT PK_Clustered PRIMARY KEY (id_user, id_vocabulary), 
  /* CONSTRAINT FK_User FOREIGN KEY (id_user) REFERENCES dbo.users (id), 
   CONSTRAINT FK_NewWord FOREIGN KEY (id_vocabulary) REFERENCES dbo.vocabulary (id), */

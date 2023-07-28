@@ -5,7 +5,10 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+
+import java.nio.file.Path;
 
 /**
  * @author BAO 7/22/2023
@@ -39,10 +42,19 @@ public class PropertiesConfig {
 
   @Value("${learnEnglish.app.timeSecondDay}")
   private int defaultSecondDay;
+
   @Value("${learnEnglish.app.leastEF}")
   private float leastEF;
 
   @Value("${learnEnglish.app.defaultQ}")
   private short defaultQ;
 
+  @Value("${app.firebase-configuration-file}")
+  private String filebaseConfigPath;
+
+  @Value("${app.notification.public.key}")
+  private String publicKeyNotification;
+
+  @Value("${app.notification.private.key}")
+  private String privateKeyNotification;
 }

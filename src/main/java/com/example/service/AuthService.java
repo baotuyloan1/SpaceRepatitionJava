@@ -1,7 +1,7 @@
 package com.example.service;
 
 import com.example.dto.SignUpRequest;
-import com.example.dto.auth.MobileSignInRes;
+import com.example.dto.auth.UserMobileSignInRes;
 import com.example.dto.auth.UserSignInResponse;
 import com.example.dto.auth.UserSignUpResponse;
 import com.example.payload.request.LoginRequest;
@@ -31,5 +31,5 @@ public interface AuthService {
 
     String generateJwtStr(UserDetailsImpl userDetails);
 
-    MobileSignInRes mobileSignIn(LoginRequest loginRequest);
+    UserMobileSignInRes mobileSignIn(LoginRequest loginRequest);
 }

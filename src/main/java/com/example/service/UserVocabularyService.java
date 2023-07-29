@@ -6,6 +6,7 @@ import com.example.dto.user.learn.*;
 import java.util.List;
 
 import com.example.entity.UserVocabularyId;
+import com.example.payload.response.UserInfoResponse;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,4 +25,6 @@ public interface UserVocabularyService {
 
   UserReviewRes updateReviewSelect(UserReviewSelectionReq req);
   UserReviewRes updateReview(UserReviewReq req);
+
+    UserInfoResponse getInfo();
 }

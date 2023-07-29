@@ -1,12 +1,13 @@
 package com.example.service.impl;
 
 import com.example.dto.SignUpRequest;
-import com.example.dto.auth.MobileSignInRes;
+import com.example.dto.auth.UserMobileSignInRes;
 import com.example.dto.auth.UserSignInResponse;
 import com.example.dto.auth.UserSignUpResponse;
 import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.enums.RoleUser;
+import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.UserMapper;
 import com.example.payload.request.LoginRequest;
 import com.example.repository.RoleRepository;
@@ -18,7 +19,6 @@ import jakarta.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -117,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public MobileSignInRes mobileSignIn(LoginRequest loginRequest) {
+  public UserMobileSignInRes mobileSignIn(LoginRequest loginRequest) {
     Authentication authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -126,7 +126,15 @@ public class AuthServiceImpl implements AuthService {
     String jwt = jwtUtils.generateTokenFromUserName(userDetails.getUsername());
     List<String> roles =
         userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-    return new MobileSignInRes(userDetails.getId(), roles, jwt);
+    UserMobileSignInRes userMobileSignInRes = new UserMobileSignInRes();
+    User user =
+        userRepository
+            .findById(userDetails.getId())
+            .orElseThrow(() -> new ResourceNotFoundException());
+    UserMobileSignInRes res = userMapper.userToUserMobileSignInRes(user);
+    res.setRoles(roles);
+    res.setToken(jwt);
+    return res;
   }
 
   @Override

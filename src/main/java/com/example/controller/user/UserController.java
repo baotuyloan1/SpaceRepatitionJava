@@ -3,6 +3,7 @@ package com.example.controller.user;
 import com.example.dto.user.*;
 import com.example.dto.user.learn.*;
 import com.example.entity.UserVocabularyId;
+import com.example.payload.response.UserInfoResponse;
 import com.example.repository.VocabularyRepository;
 import com.example.service.*;
 import java.util.List;
@@ -78,6 +79,11 @@ public class UserController {
   @GetMapping("/getNextWordToReview")
   public ResponseEntity<List<UserLearnRes>> getTimeToReview() {
     return ResponseEntity.ok().body(userVocabularyService.getWordToReview());
+  }
+
+  @GetMapping("/info")
+  public ResponseEntity<UserInfoResponse> getInfo(){
+    return ResponseEntity.ok().body(userVocabularyService.getInfo());
   }
 
 

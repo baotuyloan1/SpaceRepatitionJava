@@ -23,7 +23,7 @@ public class MessageController {
   }
 
   @PostMapping
-  public void subcribe(Subscription subscription) {
+  public void subscribe(Subscription subscription) {
     messageService.subscribe(subscription);
   }
 

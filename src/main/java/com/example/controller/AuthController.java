@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dto.auth.MobileSignInRes;
+import com.example.dto.auth.UserMobileSignInRes;
 import com.example.dto.auth.UserSignInResponse;
 import com.example.dto.auth.UserSignUpRequest;
 import com.example.dto.auth.UserSignUpResponse;
@@ -88,8 +88,8 @@ public class AuthController {
   }
 
   @PostMapping("/mobile/sign-in")
-  public ResponseEntity<MobileSignInRes> signInMobile(@RequestBody LoginRequest loginRequest) {
-    MobileSignInRes res = authService.mobileSignIn(loginRequest);
+  public ResponseEntity<UserMobileSignInRes> signInMobile(@RequestBody LoginRequest loginRequest) {
+    UserMobileSignInRes res = authService.mobileSignIn(loginRequest);
     return new ResponseEntity<>(res, HttpStatus.OK);
   }
 

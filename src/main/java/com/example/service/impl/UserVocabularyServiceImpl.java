@@ -9,6 +9,7 @@ import com.example.entity.*;
 import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.AnswerMapper;
 import com.example.mapper.VocabularyMapper;
+import com.example.payload.response.UserInfoResponse;
 import com.example.repository.QuestionRepository;
 import com.example.repository.UserRepository;
 import com.example.repository.UserVocabularyRepository;
@@ -173,6 +174,11 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
     UserReviewRes res = new UserReviewRes();
     res.setLearnAgain(isLearnAgain);
     return res;
+  }
+
+  @Override
+  public UserInfoResponse getInfo() {
+    return null;
   }
 
   private UserVocabularyId updateUserVocabulary(

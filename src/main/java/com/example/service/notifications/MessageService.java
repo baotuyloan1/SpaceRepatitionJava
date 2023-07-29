@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.Security;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.annotation.PostConstruct;
@@ -25,12 +26,16 @@ public class MessageService {
   private PropertiesConfig env;
 
   private PushService pushService;
-  private List<Subscription> subscriptions;
+  private List<Subscription> subscriptions = new ArrayList<>();
+
+  public MessageService(PropertiesConfig propertiesConfig) {
+    this.env = propertiesConfig;
+  }
 
   @PostConstruct
   private void init() throws GeneralSecurityException {
     Security.addProvider(new BouncyCastleProvider());
-    pushService = new PushService(env.getPublicKeyNotification(), env.getPrivateKeyNotification());
+    pushService = new PushService(env.getVapidPublicKey(), env.getVapidPrivateKey());
   }
 
   public void subscribe(Subscription subscription) {
@@ -75,6 +80,6 @@ public class MessageService {
   }
 
   public String getPublicKey() {
-    return env.getPublicKeyNotification();
+    return env.getVapidPublicKey();
   }
 }

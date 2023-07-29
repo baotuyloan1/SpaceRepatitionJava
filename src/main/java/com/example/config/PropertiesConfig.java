@@ -5,10 +5,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
-
-import java.nio.file.Path;
 
 /**
  * @author BAO 7/22/2023
@@ -52,9 +49,9 @@ public class PropertiesConfig {
   @Value("${app.firebase-configuration-file}")
   private String filebaseConfigPath;
 
-  @Value("${app.notification.public.key}")
-  private String publicKeyNotification;
+  @Value("${vapid.notification.public.key}")
+  private String vapidPublicKey;
 
-  @Value("${app.notification.private.key}")
-  private String privateKeyNotification;
+  @Value("${vapid.notification.private.key}")
+  private String vapidPrivateKey;
 }

@@ -1,5 +1,6 @@
 package com.example.dto.fcm;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PushNotificationRequest {
-    private String title;
-    private String message;
-    private String topic;
-    private String token;
+    private String deviceToken;
+    private String deviceType;
 }

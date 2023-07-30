@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.fcm.PushNotificationRequest;
 import com.example.dto.user.UserLearnRes;
 import com.example.dto.user.learn.*;
 
@@ -27,4 +28,6 @@ public interface UserVocabularyService {
   UserReviewRes updateReview(UserReviewReq req);
 
     UserInfoResponse getInfo();
+
+    void saveDeviceToken(PushNotificationRequest req);
 }

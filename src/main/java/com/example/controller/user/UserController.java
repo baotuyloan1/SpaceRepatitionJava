@@ -1,5 +1,6 @@
 package com.example.controller.user;
 
+import com.example.dto.fcm.PushNotificationRequest;
 import com.example.dto.user.*;
 import com.example.dto.user.learn.*;
 import com.example.entity.UserVocabularyId;
@@ -86,6 +87,12 @@ public class UserController {
     return ResponseEntity.ok().body(userVocabularyService.getInfo());
   }
 
+
+  @PostMapping("/devices")
+  public ResponseEntity<Void> saveTokenDevice(@RequestBody PushNotificationRequest req){
+    userVocabularyService.saveDeviceToken(req);
+    return new ResponseEntity<>(HttpStatus.CREATED);
+  }
 
 
 }

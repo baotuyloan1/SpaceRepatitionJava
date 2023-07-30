@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.example.config.PropertiesConfig;
+import com.example.dto.fcm.PushNotificationRequest;
 import com.example.dto.user.TypeLearnRes;
 import com.example.dto.user.TypeQuestionRes;
 import com.example.dto.user.UserLearnRes;
@@ -10,10 +11,7 @@ import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.AnswerMapper;
 import com.example.mapper.VocabularyMapper;
 import com.example.payload.response.UserInfoResponse;
-import com.example.repository.QuestionRepository;
-import com.example.repository.UserRepository;
-import com.example.repository.UserVocabularyRepository;
-import com.example.repository.VocabularyRepository;
+import com.example.repository.*;
 import com.example.security.services.UserDetailsImpl;
 import com.example.service.UserVocabularyService;
 import com.example.service.VocabularyService;
@@ -39,6 +37,7 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   private final QuestionRepository questionRepository;
   private final VocabularyRepository vocabularyRepository;
   private final UserRepository userRepository;
+  private final DeviceRepository deviceRepository;
 
   private void updateQAndEFInRightAnswer(UserVocabulary userVocabulary) {
     short currentQ = userVocabulary.getQ();
@@ -179,6 +178,22 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   @Override
   public UserInfoResponse getInfo() {
     return null;
+  }
+
+  @Override
+  public void saveDeviceToken(PushNotificationRequest req) {
+    boolean isExistDevice = deviceRepository.existsByDeviceToken(req.getDeviceToken());
+    if (!isExistDevice) {
+      Device device = new Device();
+      device.setDeviceToken(req.getDeviceToken());
+      UserDetailsImpl userDetails =
+          (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      User user = new User();
+      user.setId(userDetails.getId());
+      device.setUser(user);
+      device.setDeviceType(req.getDeviceType());
+      deviceRepository.save(device);
+    }
   }
 
   private UserVocabularyId updateUserVocabulary(

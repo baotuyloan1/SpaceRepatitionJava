@@ -4,8 +4,10 @@ import com.example.config.PropertiesConfig;
 import com.example.dto.fcm.PushNotificationRequest;
 import com.example.dto.user.TypeLearnRes;
 import com.example.dto.user.TypeQuestionRes;
-import com.example.dto.user.UserLearnRes;
+import com.example.dto.user.UserVocabularyRequest;
 import com.example.dto.user.learn.*;
+import com.example.dto.user.learn.UserLearnRes;
+import com.example.dto.user.review.UserNextWordsReq;
 import com.example.entity.*;
 import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.AnswerMapper;
@@ -83,7 +85,7 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
 
   @Transactional
   @Override
-  public List<UserLearnRes> getWordToReview() {
+  public List<UserNextWordsReq> getWordToReview() {
     Date currentDate = new Date();
     List<UserVocabulary> userVocabularyList;
     UserDetailsImpl userDetails =
@@ -98,9 +100,8 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
           userVocabularyRepository.getVocabulariesAfterCurrent(
               userDetails.getId(), new Date(nearestDate.getTime() + oneHour));
     }
-    List<Vocabulary> vocabularies =
-        userVocabularyList.stream().map(UserVocabulary::getVocabulary).toList();
-    return convertReviewVocabulariesToUserRes(vocabularies);
+
+    return convertReviewVocabulariesToUserRes(userVocabularyList);
   }
 
   @Transactional
@@ -196,6 +197,9 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
     }
   }
 
+  @Override
+  public void updateLearnedVocabulary(UserVocabularyRequest userVocabularyRequest) {}
+
   private UserVocabularyId updateUserVocabulary(
       boolean isLearnAgain, UserVocabulary userVocabulary, Date currentDate) {
     if (isLearnAgain) {
@@ -203,10 +207,11 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
       short currentQ = userVocabulary.getQ();
       int minFalse = 3;
       int requireQToLearnAgain = 4;
-      if (currentQ < minFalse) {
+      if (currentQ <= minFalse) {
         userVocabulary.setCountLearn(0);
         userVocabulary.setQ((short) 3);
         userVocabulary.setDayInterval(0);
+        userVocabulary.setDayInterval(env.getDefaultFirstDay());
       }
       if (currentQ < requireQToLearnAgain) {
         userVocabulary.setReviewDate(currentDate);
@@ -246,6 +251,9 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   public float calculateCurrentEF(float currentEF, short q) {
     float ef = (float) (currentEF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)));
     if (ef < env.getLeastEF()) ef = env.getLeastEF();
+    else if (ef > env.getHighestEF()) {
+      ef = env.getHighestEF();
+    }
     return ef;
   }
 
@@ -254,7 +262,7 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   }
 
   private static boolean isRightAnswer(UserReviewReq req, Vocabulary vocabulary) {
-    return req.getAnswer().trim().equals(vocabulary.getWord());
+    return req.getAnswer().trim().equalsIgnoreCase(vocabulary.getWord());
   }
 
   private List<UserLearnRes> convertNewVocabulariesToUserRes(List<Vocabulary> vocabularies) {
@@ -299,13 +307,15 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
     }
   }
 
-  private List<UserLearnRes> convertReviewVocabulariesToUserRes(List<Vocabulary> vocabularies) {
-    return vocabularies.stream()
+  private List<UserNextWordsReq> convertReviewVocabulariesToUserRes(
+      List<UserVocabulary> userVocabylaries) {
+    return userVocabylaries.stream()
         .map(
-            vocabulary -> {
+            userVocabulary -> {
               Set<TypeLearnRes> typeLearnResList = new LinkedHashSet<>();
-              addRandomLearningTypes(typeLearnResList, vocabulary);
-              UserLearnRes userLearnRes = vocabularyMapper.vocabularyToUserLearnRes(vocabulary);
+              addRandomLearningTypes(typeLearnResList, userVocabulary.getVocabulary());
+              UserNextWordsReq userLearnRes =
+                  vocabularyMapper.vocabularyToUserNextWordsReq(userVocabulary);
               userLearnRes.setLearnTypes(typeLearnResList);
               return userLearnRes;
             })
@@ -314,9 +324,10 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
 
   private void addRandomLearningTypes(Set<TypeLearnRes> typeLearnResList, Vocabulary vocabulary) {
     int randomTypeQuestion = random.nextInt(12);
-    if (randomTypeQuestion <= 2) {
+
+    if (randomTypeQuestion <= 2 && false) {
       addSelectType(typeLearnResList, vocabulary);
-    } else if (randomTypeQuestion <= 6) {
+    } else if (randomTypeQuestion <= 6 && false) {
       addListeningType(typeLearnResList);
     } else {
       addMeaningType(typeLearnResList);

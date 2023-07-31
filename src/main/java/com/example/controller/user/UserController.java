@@ -3,6 +3,7 @@ package com.example.controller.user;
 import com.example.dto.fcm.PushNotificationRequest;
 import com.example.dto.user.*;
 import com.example.dto.user.learn.*;
+import com.example.dto.user.review.UserNextWordsReq;
 import com.example.entity.UserVocabularyId;
 import com.example.payload.response.UserInfoResponse;
 import com.example.repository.VocabularyRepository;
@@ -64,21 +65,21 @@ public class UserController {
     return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
-  @PutMapping("/review-meaning")
-  public ResponseEntity<UserReviewRes> reviewMeaning(@RequestBody UserReviewMeaningReq req) {
+  @PutMapping("/review-word")
+  public ResponseEntity<UserReviewRes> reviewMeaning(@RequestBody UserReviewReq req) {
     UserReviewRes res = userVocabularyService.updateReview(req);
     return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
-  @PostMapping("/updateVocabulary")
-  public ResponseEntity<?> updateLearnedVocabulary(
-      @RequestBody UserVocabularyRequest userVocabularyRequest) {
-    //    userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
-    return new ResponseEntity<>("Updated learned word", HttpStatus.OK);
-  }
+//  @PutMapping("/update-vocabulary")
+//  public ResponseEntity<?> updateLearnedVocabulary(
+//      @RequestBody UserVocabularyRequest userVocabularyRequest) {
+//        userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
+//    return new ResponseEntity<>("Updated learned word", HttpStatus.OK);
+//  }
 
-  @GetMapping("/getNextWordToReview")
-  public ResponseEntity<List<UserLearnRes>> getTimeToReview() {
+  @GetMapping("/next-word-review")
+  public ResponseEntity<List<UserNextWordsReq>> getTimeToReview() {
     return ResponseEntity.ok().body(userVocabularyService.getWordToReview());
   }
 
@@ -93,6 +94,8 @@ public class UserController {
     userVocabularyService.saveDeviceToken(req);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
+
+
 
 
 }

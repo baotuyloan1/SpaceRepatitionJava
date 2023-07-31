@@ -14,6 +14,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames =  "username"),
         @UniqueConstraint(columnNames = "email")
@@ -47,6 +48,11 @@ public class User {
   @Column(name = "email",nullable = false)
   private String email;
   private String phone;
+
+  @OneToMany(mappedBy = "user")
+  private List<Device> devices;
+
+
 
 
 }

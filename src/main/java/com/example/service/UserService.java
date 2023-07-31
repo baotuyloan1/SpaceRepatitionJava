@@ -1,6 +1,6 @@
 package com.example.service;
 
-import com.example.dto.user.UserLearnRes;
+import com.example.dto.user.learn.UserLearnRes;
 import com.example.entity.User;
 import java.util.List;
 

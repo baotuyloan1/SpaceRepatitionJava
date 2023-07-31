@@ -20,6 +20,15 @@ CREATE TABLE users
         PRIMARY KEY (id)
 );
 
+CREATE TABLE devices
+(
+	id BIGINT IDENTITY,
+	id_user BIGINT ,
+	device_type VARCHAR(50),
+	device_token VARCHAR(300) UNIQUE,
+	CONSTRAINT FK_user FOREIGN KEY (id_user) REFERENCES users(id)
+);
+
 CREATE TABLE roles
 (
     id TINYINT IDENTITY,
@@ -130,6 +139,8 @@ CREATE TABLE user_vocabulary (
  /* CONSTRAINT FK_User FOREIGN KEY (id_user) REFERENCES dbo.users (id), 
   CONSTRAINT FK_NewWord FOREIGN KEY (id_vocabulary) REFERENCES dbo.vocabulary (id), */
   );
+
+
 
 
 CREATE TABLE course

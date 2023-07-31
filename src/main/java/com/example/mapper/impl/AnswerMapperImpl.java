@@ -1,6 +1,6 @@
 package com.example.mapper.impl;
 
-import com.example.dto.user.UserAnswerReponse;
+import com.example.dto.user.UserAnswerResponse;
 import com.example.entity.Answer;
 import com.example.mapper.AnswerMapper;
 import org.springframework.stereotype.Component;
@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 @Component
 public class AnswerMapperImpl implements AnswerMapper {
   @Override
-  public UserAnswerReponse answerToUserAnswerRes(Answer answer) {
-    UserAnswerReponse userAnswerReponse = new UserAnswerReponse();
-    userAnswerReponse.setAnswer(answer.getAnswer());
-    userAnswerReponse.setId(answer.getId());
-    return userAnswerReponse;
+  public UserAnswerResponse answerToUserAnswerRes(Answer answer) {
+    UserAnswerResponse userAnswerResponse = new UserAnswerResponse();
+    userAnswerResponse.setAnswer(answer.getAnswer());
+    userAnswerResponse.setId(answer.getId());
+    return userAnswerResponse;
   }
 
   @Override
-  public Set<UserAnswerReponse> answersToUserAnswersRes(List<Answer> answers) {
+  public Set<UserAnswerResponse> answersToUserAnswersRes(List<Answer> answers) {
     return answers.stream().map(this::answerToUserAnswerRes).collect(Collectors.toSet());
   }
 }

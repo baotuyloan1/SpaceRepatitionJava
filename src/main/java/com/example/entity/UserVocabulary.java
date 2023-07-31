@@ -53,6 +53,8 @@ public class UserVocabulary {
   private long dayInterval;
 
 
+
+
   public UserVocabulary(User user, Vocabulary vocabulary) {
     this.id = new UserVocabularyId(user.getId(), vocabulary.getId());
   }

@@ -1,16 +1,24 @@
 package com.example.mapper.impl;
 
+import com.example.dto.SignUpRequest;
 import com.example.dto.auth.UserMobileSignInRes;
 import com.example.dto.auth.UserSignUpResponse;
+import com.example.entity.Role;
 import com.example.entity.User;
 import com.example.mapper.UserMapper;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
  * @author BAO 7/19/2023
  */
 @Component
+@AllArgsConstructor
 public class UserMapperImpl implements UserMapper {
+  private PasswordEncoder passwordEncoder;
+
   @Override
   public UserSignUpResponse userToUserSignUpResponse(User user) {
     UserSignUpResponse userSignUpResponse = new UserSignUpResponse();
@@ -32,5 +40,20 @@ public class UserMapperImpl implements UserMapper {
     res.setLastName(user.getLastName());
     res.setPhone(user.getPhone());
     return res;
+  }
+
+  @Override
+  public User userSignUpRequestToUser(SignUpRequest req, List<Role> roles) {
+    User user = new User();
+    user.setId(req.getId());
+    user.setUsername(req.getUsername());
+    user.setPassword(passwordEncoder.encode(req.getPassword()));
+    user.setRoles(roles);
+    user.setFirstName(req.getFirstName());
+    user.setLastName(req.getLastname());
+    user.setCountWords(0);
+    user.setEmail(req.getEmail());
+    user.setPhone(req.getPhone());
+    return user;
   }
 }

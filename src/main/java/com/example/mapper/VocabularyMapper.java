@@ -1,7 +1,10 @@
 package com.example.mapper;
 
 import com.example.dto.admin.AdminVocabularyRes;
-import com.example.dto.user.UserLearnRes;
+import com.example.dto.user.learn.UserLearnRes;
+import com.example.dto.user.learn.UserReviewRes;
+import com.example.dto.user.review.UserNextWordsReq;
+import com.example.entity.UserVocabulary;
 import com.example.entity.Vocabulary;
 
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.List;
 public interface VocabularyMapper {
 
     UserLearnRes vocabularyToUserLearnRes(Vocabulary vocabulary);
+    UserNextWordsReq vocabularyToUserNextWordsReq( UserVocabulary userVocabulary);
 
     List<UserLearnRes> vocabulariesToUserLearnRes(List<Vocabulary> vocabularies);
 

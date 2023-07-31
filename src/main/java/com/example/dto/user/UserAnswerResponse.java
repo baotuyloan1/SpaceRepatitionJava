@@ -5,19 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-
 /**
- * @author BAO 7/14/2023
+ * @author BAO 7/20/2023
  */
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NextTimeReviewResonse {
-
-    private Date nextTime;
-
-    private int totalWord;
+public class UserAnswerResponse {
+  private long id;
+  private String answer;
 }

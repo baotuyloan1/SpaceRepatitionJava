@@ -2,13 +2,11 @@ package com.example.mapper.impl;
 
 import com.example.dto.admin.AdminAnswerRes;
 import com.example.dto.admin.AdminQuestionRes;
-import com.example.dto.user.UserQuestionResponse;
 import com.example.entity.Answer;
 import com.example.entity.Question;
 import com.example.mapper.QuestionMapper;
-import java.util.List;
-
 import com.example.mapper.VocabularyMapper;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,11 +19,7 @@ public class QuestionMapperImpl implements QuestionMapper {
 
   private final VocabularyMapper vocabularyMapper;
 
-  @Override
-  public UserQuestionResponse questionToUserQuestionRes(Question question) {
-    UserQuestionResponse questionResponse = new UserQuestionResponse();
-    return null;
-  }
+
 
   @Override
   public AdminQuestionRes questionToAdminQuestionRes(Question question) {

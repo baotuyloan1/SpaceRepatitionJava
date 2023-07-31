@@ -1,9 +1,7 @@
 package com.example.mapper;
 
 import com.example.dto.admin.AdminQuestionRes;
-import com.example.dto.user.UserQuestionResponse;
 import com.example.entity.Question;
-
 import java.util.List;
 
 /**
@@ -11,7 +9,6 @@ import java.util.List;
  */
 public interface QuestionMapper {
 
-    UserQuestionResponse questionToUserQuestionRes(Question question);
 
 
     AdminQuestionRes questionToAdminQuestionRes(Question question);

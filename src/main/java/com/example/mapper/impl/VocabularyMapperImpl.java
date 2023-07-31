@@ -1,7 +1,9 @@
 package com.example.mapper.impl;
 
 import com.example.dto.admin.AdminVocabularyRes;
-import com.example.dto.user.UserLearnRes;
+import com.example.dto.user.learn.UserLearnRes;
+import com.example.dto.user.review.UserNextWordsReq;
+import com.example.entity.UserVocabulary;
 import com.example.entity.Vocabulary;
 import com.example.mapper.TopicMapper;
 import com.example.mapper.VocabularyMapper;
@@ -37,6 +39,25 @@ public class VocabularyMapperImpl implements VocabularyMapper {
     userLearnRes.setIpa(vocabulary.getIpa());
     userLearnRes.setType(vocabulary.getType());
     return userLearnRes;
+  }
+
+  @Override
+  public UserNextWordsReq vocabularyToUserNextWordsReq(UserVocabulary userVocabulary) {
+    Vocabulary vocabulary = userVocabulary.getVocabulary();
+    UserNextWordsReq req = new UserNextWordsReq();
+    req.setVocabularyId(vocabulary.getId());
+    req.setImg(vocabulary.getImg());
+    req.setSentence(vocabulary.getSentence());
+    req.setAudioWord(vocabulary.getAudioWord());
+    req.setAudioSentence(vocabulary.getAudioSentence());
+    req.setWord(vocabulary.getWord());
+    req.setMeaningWord(vocabulary.getMeaningWord());
+    req.setMeaningSentence(vocabulary.getMeaningSentence());
+    req.setIpa(vocabulary.getIpa());
+    req.setType(vocabulary.getType());
+    req.setReviewDate(userVocabulary.getReviewDate());
+    req.setSubmitDate(userVocabulary.getSubmitDate());
+    return req;
   }
 
   @Override

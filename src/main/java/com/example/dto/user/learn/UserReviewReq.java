@@ -8,7 +8,7 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public abstract class UserReviewReq {
+public class UserReviewReq {
   private long vocabularyId;
   private String answer;
 }

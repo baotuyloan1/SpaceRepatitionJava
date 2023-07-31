@@ -78,17 +78,8 @@ public class AuthServiceImpl implements AuthService {
             roles.add(role);
           });
     }
-    User user =
-        new User(
-            signUpRequest.getId(),
-            signUpRequest.getUsername(),
-            roles,
-            signUpRequest.getFirstName(),
-            signUpRequest.getLastname(),
-            0,
-            passwordEncoder.encode(signUpRequest.getPassword()),
-            signUpRequest.getEmail(),
-            signUpRequest.getPhone());
+
+    User user = userMapper.userSignUpRequestToUser(signUpRequest, roles);
     User savedUser = userRepository.save(user);
     return userMapper.userToUserSignUpResponse(savedUser);
   }

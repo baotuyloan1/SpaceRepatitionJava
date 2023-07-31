@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import com.example.dto.user.CustomUserVocabulariesResult;
 import com.example.entity.UserVocabulary;
 import com.example.entity.UserVocabularyId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +25,12 @@ public interface UserVocabularyRepository extends JpaRepository<UserVocabulary, 
 
   @Query("SELECT uv FROM UserVocabulary uv  WHERE uv.user.id = ?1 AND  uv.reviewDate < ?2 ORDER BY uv.reviewDate ASC")
   List<UserVocabulary> getVocabulariesAfterCurrent(Long id, Date date);
+
+//  @Query("SELECT count(user.id), user FROM UserVocabulary  uv JOIN uv.user user WHERE  uv.reviewDate < ?1 GROUP BY user")
+//  List<Object[]> getUserVocabulariesBeforeCurrent(Date currentDate);
+
+  @Query("SELECT NEW com.example.dto.user.CustomUserVocabulariesResult(count (uv.user.id),uv.user) FROM UserVocabulary  uv JOIN uv.user user WHERE  uv.reviewDate < ?1 GROUP BY user")
+  List<CustomUserVocabulariesResult> getUserVocabulariesBeforeCurrent(Date currentDate);
+  @Query("SELECT uv from UserVocabulary  uv WHERE  uv.reviewDate < ?1 AND uv.reviewDate> ?2")
+  List<UserVocabulary> getUserVocabulariesPrepare(Date futureDate, Date curentDate);
 }

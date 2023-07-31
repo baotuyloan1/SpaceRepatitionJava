@@ -1,6 +1,6 @@
 package com.example.service.impl;
 
-import com.example.dto.user.*;
+import com.example.dto.user.learn.UserLearnRes;
 import com.example.entity.*;
 import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.AnswerMapper;
@@ -10,7 +10,7 @@ import com.example.security.services.UserDetailsImpl;
 import com.example.service.UserService;
 import com.example.service.UserVocabularyService;
 import com.example.service.VocabularyService;
-import jakarta.transaction.Transactional;
+
 import java.util.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;

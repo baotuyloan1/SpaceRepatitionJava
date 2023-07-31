@@ -42,6 +42,8 @@ public class PropertiesConfig {
 
   @Value("${learnEnglish.app.leastEF}")
   private float leastEF;
+  @Value("${learnEnglish.app.highestEF}")
+  private float highestEF;
 
   @Value("${learnEnglish.app.defaultQ}")
   private short defaultQ;
@@ -54,4 +56,6 @@ public class PropertiesConfig {
 
   @Value("${vapid.notification.private.key}")
   private String vapidPrivateKey;
+
+
 }

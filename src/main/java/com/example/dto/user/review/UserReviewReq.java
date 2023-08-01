@@ -1,4 +1,4 @@
-package com.example.dto.user.learn;
+package com.example.dto.user.review;
 
 import lombok.Getter;
 import lombok.Setter;

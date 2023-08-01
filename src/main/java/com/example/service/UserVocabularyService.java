@@ -1,15 +1,16 @@
 package com.example.service;
 
 import com.example.dto.fcm.PushNotificationRequest;
-import com.example.dto.user.learn.UserLearnRes;
+import com.example.dto.user.BaseUserResApi;
 import com.example.dto.user.UserVocabularyRequest;
 import com.example.dto.user.learn.*;
-
-import java.util.List;
-
+import com.example.dto.user.learn.UserLearnRes;
 import com.example.dto.user.review.UserNextWordsReq;
+import com.example.dto.user.review.UserReviewReq;
+import com.example.dto.user.review.UserReviewRes;
 import com.example.entity.UserVocabularyId;
 import com.example.payload.response.UserInfoResponse;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,8 +18,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface UserVocabularyService {
-
-
 
   List<UserNextWordsReq> getWordToReview();
 
@@ -30,9 +29,11 @@ public interface UserVocabularyService {
 
   UserReviewRes updateReview(UserReviewReq req);
 
-    UserInfoResponse getInfo();
+  UserInfoResponse getInfo();
 
-    void saveDeviceToken(PushNotificationRequest req);
+  void saveDeviceToken(PushNotificationRequest req);
 
   void updateLearnedVocabulary(UserVocabularyRequest userVocabularyRequest);
+
+  BaseUserResApi getLearnedWords();
 }

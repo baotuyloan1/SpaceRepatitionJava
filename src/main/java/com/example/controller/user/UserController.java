@@ -4,6 +4,8 @@ import com.example.dto.fcm.PushNotificationRequest;
 import com.example.dto.user.*;
 import com.example.dto.user.learn.*;
 import com.example.dto.user.review.UserNextWordsReq;
+import com.example.dto.user.review.UserReviewReq;
+import com.example.dto.user.review.UserReviewRes;
 import com.example.entity.UserVocabularyId;
 import com.example.payload.response.UserInfoResponse;
 import com.example.repository.VocabularyRepository;
@@ -71,12 +73,12 @@ public class UserController {
     return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
-//  @PutMapping("/update-vocabulary")
-//  public ResponseEntity<?> updateLearnedVocabulary(
-//      @RequestBody UserVocabularyRequest userVocabularyRequest) {
-//        userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
-//    return new ResponseEntity<>("Updated learned word", HttpStatus.OK);
-//  }
+  //  @PutMapping("/update-vocabulary")
+  //  public ResponseEntity<?> updateLearnedVocabulary(
+  //      @RequestBody UserVocabularyRequest userVocabularyRequest) {
+  //        userVocabularyService.updateLearnedVocabulary(userVocabularyRequest);
+  //    return new ResponseEntity<>("Updated learned word", HttpStatus.OK);
+  //  }
 
   @GetMapping("/next-word-review")
   public ResponseEntity<List<UserNextWordsReq>> getTimeToReview() {
@@ -84,18 +86,19 @@ public class UserController {
   }
 
   @GetMapping("/info")
-  public ResponseEntity<UserInfoResponse> getInfo(){
+  public ResponseEntity<UserInfoResponse> getInfo() {
     return ResponseEntity.ok().body(userVocabularyService.getInfo());
   }
 
-
   @PostMapping("/devices")
-  public ResponseEntity<Void> saveTokenDevice(@RequestBody PushNotificationRequest req){
+  public ResponseEntity<Void> saveTokenDevice(@RequestBody PushNotificationRequest req) {
     userVocabularyService.saveDeviceToken(req);
     return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
-
-
-
+  @GetMapping("/learned-words")
+  public ResponseEntity<BaseUserResApi> getLearnedWords() {
+    BaseUserResApi learnedWords = userVocabularyService.getLearnedWords();
+    return new ResponseEntity<>(learnedWords, HttpStatus.OK);
+  }
 }

@@ -33,4 +33,8 @@ public interface UserVocabularyRepository extends JpaRepository<UserVocabulary, 
   List<CustomUserVocabulariesResult> getUserVocabulariesBeforeCurrent(Date currentDate);
   @Query("SELECT uv from UserVocabulary  uv WHERE  uv.reviewDate < ?1 AND uv.reviewDate> ?2")
   List<UserVocabulary> getUserVocabulariesPrepare(Date futureDate, Date curentDate);
+
+  @Query("SELECT uv FROM  UserVocabulary  uv WHERE  uv.user.id = ?1")
+  List<UserVocabulary> getLearnedVocabulariesByUserId(Long userId);
+
 }

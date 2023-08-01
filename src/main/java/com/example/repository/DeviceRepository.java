@@ -2,6 +2,7 @@ package com.example.repository;
 
 import com.example.entity.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,4 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 
     boolean existsByDeviceToken(String deviceToken);
+
+    @Query("UPDATE Device  SET notification = false ")
+    void updateNotificationStatus();
 }

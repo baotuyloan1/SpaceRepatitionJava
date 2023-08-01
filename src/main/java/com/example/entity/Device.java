@@ -24,4 +24,6 @@ public class Device {
   private String deviceToken;
 
   private String deviceType;
+
+  private boolean notification;
 }

@@ -8,16 +8,14 @@ import com.example.service.UserVocabularyService;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**
@@ -48,7 +46,7 @@ public class FCMService {
    * (0-7), 0 và 7 đại diện cho Chủ Nhật, 1 đến 6 đại diện cho Thứ 2 đến Thứ 7.
    */
   //   0 0 7,19 * * *
-  //  @Scheduled(cron = "* * * * * *")
+  @Scheduled(cron = "0/15 * * * * *")
   @Transactional
   public void sendNotificationAt7AM() {
     Date currentDate = new Date();
@@ -56,25 +54,37 @@ public class FCMService {
         userVocabularyRepository.getUserVocabulariesBeforeCurrent(currentDate);
     for (CustomUserVocabulariesResult item : userVocabularies) {
       for (Device deviceUser : item.getUser().getDevices()) {
-        String registrationToken = deviceUser.getDeviceToken();
-        Message message =
-            Message.builder()
-                .setNotification(
-                    Notification.builder()
-                        .setTitle("Vào ôn tập ngay thôi nào")
-                        .setBody("Đang có " + item.getCount() + " từ cần được ôn tập")
-                        .build())
-                .setToken(registrationToken)
-                .build();
-        try {
-          String response = FirebaseMessaging.getInstance().send(message);
-          System.out.println("Successfully went message: " + response);
-        } catch (FirebaseMessagingException e) {
-          if (e.getMessagingErrorCode().name().equals("UNREGISTERED")) {
-            deviceRepository.delete(deviceUser);
+        if (!deviceUser.isNotification()) {
+          String registrationToken = deviceUser.getDeviceToken();
+          Message message =
+              Message.builder()
+                  .setWebpushConfig(
+                      WebpushConfig.builder()
+                          .setNotification(
+                              WebpushNotification.builder()
+                                  .setTitle("Vào ôn tập ngay thôi nào")
+                                  .setBody("Đang có " + item.getCount() + " từ cần được ôn tập")
+                                  .build()).setFcmOptions(WebpushFcmOptions.builder().setLink("/user").build())
+                          .build())
+                  .setToken(registrationToken)
+                  .build();
+          try {
+            String response = FirebaseMessaging.getInstance().send(message);
+            System.out.println("Successfully went message: " + response);
+            deviceUser.setNotification(true);
+            deviceRepository.save(deviceUser);
+          } catch (FirebaseMessagingException e) {
+            if (e.getMessagingErrorCode().name().equals("UNREGISTERED")) {
+              deviceRepository.delete(deviceUser);
+            }
           }
         }
       }
     }
+  }
+
+  @Scheduled(cron = "0 0 12,18,0,6 * * *")
+  public void resetNotification() {
+    deviceRepository.updateNotificationStatus();
   }
 }

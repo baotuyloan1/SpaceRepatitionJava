@@ -2,12 +2,15 @@ package com.example.service.impl;
 
 import com.example.config.PropertiesConfig;
 import com.example.dto.fcm.PushNotificationRequest;
+import com.example.dto.user.BaseUserResApi;
 import com.example.dto.user.TypeLearnRes;
 import com.example.dto.user.TypeQuestionRes;
 import com.example.dto.user.UserVocabularyRequest;
 import com.example.dto.user.learn.*;
 import com.example.dto.user.learn.UserLearnRes;
 import com.example.dto.user.review.UserNextWordsReq;
+import com.example.dto.user.review.UserReviewReq;
+import com.example.dto.user.review.UserReviewRes;
 import com.example.entity.*;
 import com.example.exception.ResourceNotFoundException;
 import com.example.mapper.AnswerMapper;
@@ -56,10 +59,12 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   private void updateQAndEFInFalseAnswer(UserVocabulary userVocabulary) {
     short currentQ = userVocabulary.getQ();
     int minQ = 0;
+
     if (currentQ < minQ) {
       userVocabulary.setQ(currentQ);
     } else {
-      userVocabulary.setQ(--currentQ);
+      currentQ = (short) (currentQ - 2);
+      userVocabulary.setQ(currentQ);
     }
     float currentEF = calculateCurrentEF(userVocabulary.getEf(), currentQ);
     userVocabulary.setEf(currentEF);
@@ -200,6 +205,51 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   @Override
   public void updateLearnedVocabulary(UserVocabularyRequest userVocabularyRequest) {}
 
+  private UserLearnedWordsRes countLearnedWords(List<UserVocabulary> userVocabularies) {
+    UserLearnedWordsRes data = new UserLearnedWordsRes();
+
+    int countLv1 = 0;
+    int countLv2 = 0;
+    int countLv3 = 0;
+    int countLv4 = 0;
+    int countLv5 = 0;
+    for (UserVocabulary userVocabulary : userVocabularies) {
+      if (userVocabulary.getDayInterval() < env.getHighestLearnedLv1()) {
+        ++countLv1;
+      } else if (userVocabulary.getDayInterval() < env.getHighestLearnedLv2()) {
+        ++countLv2;
+      } else if (userVocabulary.getDayInterval() < env.getHighestLearnedLv3()) {
+        ++countLv3;
+      } else if (userVocabulary.getDayInterval() < env.getHighestLearnedLv4()) {
+        ++countLv4;
+      } else {
+        ++countLv5;
+      }
+    }
+    data.setCountWordsLv1(countLv1);
+    data.setCountWordsLv2(countLv2);
+    data.setCountWordsLv3(countLv3);
+    data.setCountWordsLv4(countLv4);
+    data.setCountWordsLv5(countLv5);
+    return data;
+  }
+
+  @Override
+  public BaseUserResApi getLearnedWords() {
+    UserDetailsImpl userDetails =
+        (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    List<UserVocabulary> userVocabularies =
+        userVocabularyRepository.getLearnedVocabulariesByUserId(userDetails.getId());
+
+    UserLearnedWordsRes data = countLearnedWords(userVocabularies);
+
+    /** Level 5, day interval between (120,...) */
+    BaseUserResApi res = new BaseUserResApi();
+    res.setMessage("sucess");
+    res.setResult(data);
+    return res;
+  }
+
   private UserVocabularyId updateUserVocabulary(
       boolean isLearnAgain, UserVocabulary userVocabulary, Date currentDate) {
     if (isLearnAgain) {
@@ -207,7 +257,7 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
       short currentQ = userVocabulary.getQ();
       int minFalse = 3;
       int requireQToLearnAgain = 4;
-      if (currentQ <= minFalse) {
+      if (currentQ < minFalse) {
         userVocabulary.setCountLearn(0);
         userVocabulary.setQ((short) 3);
         userVocabulary.setDayInterval(0);
@@ -325,9 +375,9 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   private void addRandomLearningTypes(Set<TypeLearnRes> typeLearnResList, Vocabulary vocabulary) {
     int randomTypeQuestion = random.nextInt(12);
 
-    if (randomTypeQuestion <= 2 && false) {
+    if (randomTypeQuestion <= 2) {
       addSelectType(typeLearnResList, vocabulary);
-    } else if (randomTypeQuestion <= 6 && false) {
+    } else if (randomTypeQuestion <= 6) {
       addListeningType(typeLearnResList);
     } else {
       addMeaningType(typeLearnResList);

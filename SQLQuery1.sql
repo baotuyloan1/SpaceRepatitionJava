@@ -28,6 +28,7 @@ CREATE TABLE devices
 	device_token VARCHAR(300) UNIQUE,
 	CONSTRAINT FK_user FOREIGN KEY (id_user) REFERENCES users(id)
 );
+ALTER TABLE devices ADD notification  BIT NOT NULL DEFAULT(0)
 
 CREATE TABLE roles
 (

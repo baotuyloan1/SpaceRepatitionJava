@@ -1,7 +1,7 @@
 package com.example.service;
 
 import com.example.dto.fcm.PushNotificationRequest;
-import com.example.dto.user.BaseUserResApi;
+import com.example.dto.BaseResApi;
 import com.example.dto.user.UserVocabularyRequest;
 import com.example.dto.user.learn.*;
 import com.example.dto.user.learn.UserLearnRes;
@@ -35,5 +35,5 @@ public interface UserVocabularyService {
 
   void updateLearnedVocabulary(UserVocabularyRequest userVocabularyRequest);
 
-  BaseUserResApi getLearnedWords();
+  BaseResApi getLearnedWords();
 }

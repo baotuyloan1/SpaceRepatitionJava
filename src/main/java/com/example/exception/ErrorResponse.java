@@ -14,15 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ErrorResponse {
 
-    // lưu trạng thái trả về
-    private String status;
-
-    private int statusCode;
-
-//    sring của statuscode
-    private String statusString;
-
-    private String messageError;
+    private String message;
+    private String reason;
 
 
 }

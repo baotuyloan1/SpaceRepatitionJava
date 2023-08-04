@@ -1,5 +1,6 @@
 package com.example.controller.user;
 
+import com.example.dto.BaseResApi;
 import com.example.dto.fcm.PushNotificationRequest;
 import com.example.dto.user.*;
 import com.example.dto.user.learn.*;
@@ -34,19 +35,26 @@ public class UserController {
   private final VocabularyRepository vocabularyRepository;
 
   @GetMapping("/courses")
-  public ResponseEntity<List<UserCourseRes>> getAllCourses() {
-    return new ResponseEntity<>(courseService.userGetCourses(), HttpStatus.OK);
+  public ResponseEntity<BaseResApi<List<UserCourseRes>>> getAllCourses() {
+    List<UserCourseRes> list = courseService.userGetCourses();
+    BaseResApi<List<UserCourseRes>> res = new BaseResApi<>("Get courses successfully !", list);
+    return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
   @GetMapping("/courses/{id}/topics")
-  public ResponseEntity<List<UserTopicRes>> getByIdCourse(@PathVariable("id") int courseId) {
-    return new ResponseEntity<>(topicService.userGetTopics(courseId), HttpStatus.OK);
+  public ResponseEntity<BaseResApi<List<UserTopicRes>>> getByIdCourse(
+      @PathVariable("id") int courseId) {
+    List<UserTopicRes> list = topicService.userGetTopics(courseId);
+    BaseResApi<List<UserTopicRes>> res = new BaseResApi<>("Get topics successfully !", list);
+    return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
   @GetMapping("/topics/{id}/vocabularies")
-  public ResponseEntity<List<UserLearnRes>> listVocabulary(@PathVariable("id") int topicId) {
-    return new ResponseEntity<>(
-        userVocabularyService.getVocabulariesByTopicId(topicId), HttpStatus.OK);
+  public ResponseEntity<BaseResApi<List<UserLearnRes>>> listVocabulary(
+      @PathVariable("id") int topicId) {
+    List<UserLearnRes> list = userVocabularyService.getVocabulariesByTopicId(topicId);
+    BaseResApi<List<UserLearnRes>> res = new BaseResApi<>("Get vocabularies successfully !", list);
+    return new ResponseEntity<>(res, HttpStatus.OK);
   }
 
   /**
@@ -97,8 +105,8 @@ public class UserController {
   }
 
   @GetMapping("/learned-words")
-  public ResponseEntity<BaseUserResApi> getLearnedWords() {
-    BaseUserResApi learnedWords = userVocabularyService.getLearnedWords();
+  public ResponseEntity<BaseResApi> getLearnedWords() {
+    BaseResApi learnedWords = userVocabularyService.getLearnedWords();
     return new ResponseEntity<>(learnedWords, HttpStatus.OK);
   }
 }

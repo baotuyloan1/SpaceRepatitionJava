@@ -17,7 +17,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class SignUpRequest {
-    private long id;
     private String username;
     private String firstName;
     private String lastname;

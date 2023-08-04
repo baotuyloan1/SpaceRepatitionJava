@@ -1,10 +1,15 @@
 ﻿--DROP DATABASE LearnLanguages;
+
+EXECUTE sp_helpindex users
+
 CREATE DATABASE LearnLanguages
 GO
 
 USE LearnLanguages;
 GO
 
+-- clustered index has to maintain the physical order of the stored records 
+-- according to the indexed column
 
 CREATE TABLE users
 (
@@ -17,18 +22,19 @@ CREATE TABLE users
     email VARCHAR(200),
     phone CHAR(11),
     CONSTRAINT PK_User
-        PRIMARY KEY (id)
+        PRIMARY KEY (id) --clustered index
 );
 
 CREATE TABLE devices
 (
-	id BIGINT IDENTITY,
+	id BIGINT IDENTITY PRIMARY KEY,
 	id_user BIGINT ,
 	device_type VARCHAR(50),
 	device_token VARCHAR(300) UNIQUE,
 	CONSTRAINT FK_user FOREIGN KEY (id_user) REFERENCES users(id)
 );
 ALTER TABLE devices ADD notification  BIT NOT NULL DEFAULT(0)
+ALTER TABLE devices drop column notification
 
 CREATE TABLE roles
 (

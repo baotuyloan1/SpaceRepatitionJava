@@ -2,7 +2,7 @@ package com.example.service.impl;
 
 import com.example.config.PropertiesConfig;
 import com.example.dto.fcm.PushNotificationRequest;
-import com.example.dto.user.BaseUserResApi;
+import com.example.dto.BaseResApi;
 import com.example.dto.user.TypeLearnRes;
 import com.example.dto.user.TypeQuestionRes;
 import com.example.dto.user.UserVocabularyRequest;
@@ -235,7 +235,7 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
   }
 
   @Override
-  public BaseUserResApi getLearnedWords() {
+  public BaseResApi getLearnedWords() {
     UserDetailsImpl userDetails =
         (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     List<UserVocabulary> userVocabularies =
@@ -244,9 +244,9 @@ public class UserVocabularyServiceImpl implements UserVocabularyService {
     UserLearnedWordsRes data = countLearnedWords(userVocabularies);
 
     /** Level 5, day interval between (120,...) */
-    BaseUserResApi res = new BaseUserResApi();
+    BaseResApi res = new BaseResApi();
     res.setMessage("sucess");
-    res.setResult(data);
+    res.setData(data);
     return res;
   }
 

@@ -46,7 +46,7 @@ public class FCMService {
    * (0-7), 0 và 7 đại diện cho Chủ Nhật, 1 đến 6 đại diện cho Thứ 2 đến Thứ 7.
    */
   //   0 0 7,19 * * *
-  @Scheduled(cron = "0/15 * * * * *")
+//  @Scheduled(cron = "0/15 * * * * *")
   @Transactional
   public void sendNotificationAt7AM() {
     Date currentDate = new Date();
@@ -83,8 +83,8 @@ public class FCMService {
     }
   }
 
-  @Scheduled(cron = "0 0 12,18,0,6 * * *")
-  public void resetNotification() {
-    deviceRepository.updateNotificationStatus();
-  }
+//  @Scheduled(cron = "0 0 12,18,0,6 * * *")
+//  public void resetNotification() {
+//    deviceRepository.updateNotificationStatus();
+//  }
 }

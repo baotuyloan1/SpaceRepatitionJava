@@ -45,7 +45,6 @@ public class UserMapperImpl implements UserMapper {
   @Override
   public User userSignUpRequestToUser(SignUpRequest req, List<Role> roles) {
     User user = new User();
-    user.setId(req.getId());
     user.setUsername(req.getUsername());
     user.setPassword(passwordEncoder.encode(req.getPassword()));
     user.setRoles(roles);

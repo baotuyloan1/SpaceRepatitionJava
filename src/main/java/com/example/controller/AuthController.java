@@ -1,16 +1,19 @@
 package com.example.controller;
 
+import com.example.dto.BaseResApi;
 import com.example.dto.auth.UserMobileSignInRes;
 import com.example.dto.auth.UserSignInResponse;
 import com.example.dto.auth.UserSignUpRequest;
 import com.example.dto.auth.UserSignUpResponse;
-import com.example.exception.ApiRequestException;
-import com.example.exception.ErrorResponse;
+import com.example.exception.DataConflictException;
+import com.example.exception.FieldsExistRes;
 import com.example.payload.request.LoginRequest;
 import com.example.payload.response.MessageResponse;
 import com.example.security.services.UserDetailsImpl;
 import com.example.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.LinkedList;
+import java.util.List;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,31 +36,27 @@ public class AuthController {
     this.authenticationManager = authenticationManager;
   }
 
-  private ResponseEntity<?> badRequest(String message) {
-    return ResponseEntity.badRequest()
-        .body(
-            new ErrorResponse(
-                "error",
-                HttpStatus.BAD_REQUEST.value(),
-                HttpStatus.BAD_REQUEST.toString(),
-                message));
-  }
-
   @PostMapping("/sign-up")
-  public ResponseEntity<Long> signUpUser(@RequestBody UserSignUpRequest signUpRequest) {
+  public ResponseEntity<BaseResApi<UserSignUpResponse> > signUpUser(@RequestBody UserSignUpRequest signUpRequest) {
     boolean isExistsUserName = authService.isExistUserName(signUpRequest.getUsername());
     boolean isExistsEmail = authService.isExistEmail(signUpRequest.getEmail());
-    if (isExistsEmail && isExistsUserName) {
-      throw new ApiRequestException("Email và UserName đã tồn tại trong hệ thống");
-    }
+    List<FieldsExistRes> fields = new LinkedList<>();
     if (isExistsEmail) {
-      throw new ApiRequestException("Email đã tồn tại trong hệ thống");
+      FieldsExistRes field = new FieldsExistRes("email", "Email đã tồn tại trong hệ thống");
+      fields.add(field);
     }
     if (isExistsUserName) {
-      throw new ApiRequestException("UserName đã tồn tại trong hệ thống");
+      FieldsExistRes field = new FieldsExistRes("username", "Username đã tồn tại trong hệ thống");
+      fields.add(field);
     }
+    if (!fields.isEmpty())
+      throw new DataConflictException("Dữ liệu đã tồn tại trong hệ thống", fields);
+
     UserSignUpResponse user = authService.signUpUser(signUpRequest);
-    return new ResponseEntity<>(user.getId(), HttpStatus.CREATED);
+    BaseResApi<UserSignUpResponse> baseResApi = new BaseResApi<>();
+    baseResApi.setMessage("Đăng ký thành công");
+    baseResApi.setData(user);
+    return new ResponseEntity<>(baseResApi, HttpStatus.CREATED);
   }
 
   /**
@@ -88,9 +87,13 @@ public class AuthController {
   }
 
   @PostMapping("/mobile/sign-in")
-  public ResponseEntity<UserMobileSignInRes> signInMobile(@RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<BaseResApi<UserMobileSignInRes>> signInMobile(
+      @RequestBody LoginRequest loginRequest) {
     UserMobileSignInRes res = authService.mobileSignIn(loginRequest);
-    return new ResponseEntity<>(res, HttpStatus.OK);
+    BaseResApi<UserMobileSignInRes> baseResApi = new BaseResApi<>();
+    baseResApi.setMessage("Đăng nhập thành công");
+    baseResApi.setData(res);
+    return new ResponseEntity<>(baseResApi, HttpStatus.OK);
   }
 
   @PostMapping("/sign-out")

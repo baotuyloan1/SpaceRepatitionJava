@@ -16,7 +16,6 @@ public class ApiRequestException extends RuntimeException {
   private String message;
 
 
-
   public ApiRequestException(String message) {
     this.message = message;
   }
